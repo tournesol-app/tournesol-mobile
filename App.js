@@ -1,32 +1,36 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+import { HomeScreen } from './src/components/HomeScreen';
+import { SearchScreen } from './src/components/SearchScreen';
+import { RateScreen } from './src/components/RateScreen';
+import { ProfileScreen } from './src/components/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            return <Icon.Button
+              name={{Home: "home", Profile: "person", Rate: "functions", Search: "search"}[route.name]}
+              backgroundColor="transparent" color={color} size={size}
+            />;
+          }
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}
+      >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen name="Search" component={SearchScreen} />
+        <Tab.Screen name="Rate" component={RateScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );

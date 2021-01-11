@@ -3,7 +3,7 @@ import { FlatList, Text, TextInput, View } from 'react-native';
 
 import YouTube from 'react-native-youtube';
 
-export class SearchScreen extends React.Component {
+export default class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { AuthContext } from './src/AuthContext';
 import { HomeScreen, ProfileScreen, RateScreen, SearchScreen } from './src/components';
+import { authenticate } from './src/services';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,12 +32,13 @@ export default function App() {
   
   const authContext = {
     state: authState,
-    signIn: async data => {
+    signIn: async (username, password) => {
       // In a production app, we need to send some data (usually username, password) to server and get a token
       // We will also need to handle errors if sign in failed
       // After getting token, we need to persist the token using `AsyncStorage`
       // In the example, we'll use a dummy token
-      dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+      const token = await authenticate(username, password)
+      dispatch({ type: 'SIGN_IN', token: token });
     },
     signOut: () => dispatch({ type: 'SIGN_OUT' }),
     signUp: async data => {

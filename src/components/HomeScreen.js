@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation }) {
         {
           (auth.state.token != null)
             ? <Button title="Contribute" onPress={() => navigation.navigate('Rate')} />  
-            : <Button title="Log In / Sign Up" onPress={() => auth.signIn()} />
+            : <Button title="Log In / Sign Up" onPress={() => auth.signIn("thomas", "thomas")} />
         }
         <Text>Pouet: {auth.state.token}</Text>
       </View>

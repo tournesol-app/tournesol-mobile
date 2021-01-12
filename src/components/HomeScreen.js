@@ -17,6 +17,7 @@ export default function HomeScreen({ navigation }) {
           fullscreen={false} // control whether the video should play in fullscreen or inline
           loop={false} // control whether the video should loop when ended
           style={{ marginTop: 10, alignSelf: "center", height: 300, width: "90%" }}
+          resumePlayAndroid={false}
         />
         <Text>
           Tournesol elicits and exploits contributors' inputs to identify top quality contents.
@@ -26,7 +27,7 @@ export default function HomeScreen({ navigation }) {
         {
           (auth.state.token != null)
             ? <Button title="Contribute" onPress={() => navigation.navigate('Rate')} />  
-            : <Button title="Log In / Sign Up" onPress={() => auth.signIn("sergei", "thomas")} />
+            : <Button title="Log In / Sign Up" onPress={() => navigation.navigate('Login')} />
         }
         <Text>Pouet: {auth.state.token}</Text>
       </View>

@@ -44,6 +44,7 @@ export default class SearchScreen extends React.Component {
                 fullscreen={false} // control whether the video should play in fullscreen or inline
                 loop={false} // control whether the video should loop when ended
                 style={{ flex: 0.4 }}
+                resumePlayAndroid={false}
               />
               <Text style={{flex: 0.6}}>
                 <Text style={{flexWrap: 'wrap'}}>{item.name}{"\n"}</Text>

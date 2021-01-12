@@ -28,7 +28,11 @@ export default class ProfileScreen extends React.Component {
 
   componentDidMount() {
     this.loadProfile();
-    console.log(this.profile);
+  }
+  componentDidUpdate() {
+    if (this.state.profile.username != this.context.state.username) {
+      this.loadProfile();
+    }
   }
 
   render() {
@@ -60,4 +64,3 @@ export default class ProfileScreen extends React.Component {
           </View>
   }
 }
-//<Image source={{uri: this.state.profile.avatar}} width="100"></Image>

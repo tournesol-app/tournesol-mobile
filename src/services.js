@@ -24,7 +24,7 @@ export class APIClient {
       }
       const response = await fetch(url, data);
       const json = await response.json();
-      console.log(json)
+      console.log(payload, json);
       return json;
     } catch (error) {
       // FIXME

@@ -17,23 +17,26 @@ export default function App() {
           return {
             ...prevState,
             token: action.token,
+            username: action.username,
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
             token: null,
+            username: null,
           };
         }
       },
       {
         token: null,
+        username: null,
       }
   );
   
   const authContext = {
     state: authState,
     getClient: function() {
-      return new APIClient(this.state.token);
+      return new APIClient(this.state.token, this.state.username);
     },
     signIn: async function (username, password) {
       // In a production app, we need to send some data (usually username, password) to server and get a token
@@ -41,7 +44,7 @@ export default function App() {
       // After getting token, we need to persist the token using `AsyncStorage`
       // In the example, we'll use a dummy token
       const token = await this.getClient().authenticate(username, password);
-      dispatch({ type: 'SIGN_IN', token: token });
+      dispatch({ type: 'SIGN_IN', token: token, username: username, });
     },
     signOut: () => dispatch({ type: 'SIGN_OUT' }),
     signUp: async data => {

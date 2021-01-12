@@ -1,6 +1,7 @@
 export class APIClient {
-  constructor(authToken = null) {
+  constructor(authToken = null, username = null) {
     this.authToken = authToken;
+    this.username = username;
   }
   async request(endpoint, method = "GET", params = null, payload = null) {
     try {
@@ -44,6 +45,17 @@ export class APIClient {
       'GET',
       {
         search: q
+      }
+    );
+    return response;
+  }
+
+  async myProfile() {
+    const response = await this.request(
+      '/api/v2/user_information/',
+      'GET',
+      {
+        user__username: this.username
       }
     );
     return response;

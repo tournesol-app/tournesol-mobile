@@ -10,6 +10,10 @@ target 'tournesolApp' do
 
   pod 'react-native-config', :path => '../node_modules/react-native-config'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
+
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'tournesolAppTests' do
     inherit! :complete
     # Pods for testing

@@ -10,7 +10,6 @@ export default function HomeScreen({ navigation }) {
     <AuthContext.Consumer>
       {auth =>
       <View>
-        <Text style={{fontWeight: "bold", fontSize: 18, textAlign: "center", marginTop: 0, width: "100%", backgroundColor: "yellow"}}>🌻 Tournesol</Text>
         <YouTube
           videoId="1J7h3F-nKus"
           apiKey={Config.YOUTUBE_API_KEY}

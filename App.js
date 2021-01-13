@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { AuthContext } from './src/AuthContext';
@@ -9,6 +11,16 @@ import { HomeScreen, LoginScreen, ProfileScreen, RateScreen, SearchScreen } from
 import { APIClient } from './src/services';
 
 const Tab = createBottomTabNavigator();
+const HomeStack = createStackNavigator();
+
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator headerMode="none">
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="Login" component={LoginScreen} />
+    </HomeStack.Navigator>
+  );
+}
 
 export default function App() {
   const [authState, dispatch] = React.useReducer(
@@ -81,6 +93,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthContext.Provider value={authContext}>
+        <Text style={{fontWeight: "bold", fontSize: 18, textAlign: "center", marginTop: 0, width: "100%", backgroundColor: "yellow"}}>🌻 Tournesol</Text>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ color, size }) => {
@@ -96,11 +109,10 @@ export default function App() {
             style: { backgroundColor: 'yellow'}
           }}
         >
-          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Home" component={HomeStackScreen} />
           <Tab.Screen name="Search" component={SearchScreen} />
           <Tab.Screen name="Rate" component={RateScreen} />
           <Tab.Screen name="Profile" component={ProfileScreen} />
-          <Tab.Screen name="Login" component={LoginScreen} />
         </Tab.Navigator>
       </AuthContext.Provider>
     </NavigationContainer>

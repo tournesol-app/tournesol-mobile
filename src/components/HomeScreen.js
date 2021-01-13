@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Button, Linking, Text, View } from 'react-native';
 import YouTube from 'react-native-youtube';
+import Config from "react-native-config";
 
 import { AuthContext } from '../AuthContext';
 
@@ -12,7 +13,7 @@ export default function HomeScreen({ navigation }) {
         <Text style={{fontWeight: "bold", fontSize: 18, textAlign: "center", marginTop: 0, width: "100%", backgroundColor: "yellow"}}>🌻 Tournesol</Text>
         <YouTube
           videoId="1J7h3F-nKus"
-          apiKey="AIzaSyBYLuyZhqUXsAwdmaBBSHhfV6t9AuM2fgY"
+          apiKey={Config.YOUTUBE_API_KEY}
           play={false} // control playback of video with true/false
           fullscreen={false} // control whether the video should play in fullscreen or inline
           loop={false} // control whether the video should loop when ended

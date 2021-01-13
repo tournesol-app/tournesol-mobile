@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FlatList, Text, TextInput, View } from 'react-native';
 import YouTube from 'react-native-youtube';
+import Config from "react-native-config";
 
 import { AuthContext } from '../AuthContext';
 
@@ -39,7 +40,7 @@ export default class SearchScreen extends React.Component {
             >
               <YouTube
                 videoId={item.video_id}
-                apiKey="AIzaSyBYLuyZhqUXsAwdmaBBSHhfV6t9AuM2fgY"
+                apiKey={Config.YOUTUBE_API_KEY}
                 play={false} // control playback of video with true/false
                 fullscreen={false} // control whether the video should play in fullscreen or inline
                 loop={false} // control whether the video should loop when ended

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, Linking, TextInput, View } from 'react-native';
 import { AuthContext } from '../AuthContext';
-import { Avatar, ListItem, Text } from 'react-native-elements';
+import { Avatar, ListItem, Input, Text } from 'react-native-elements';
 
 export default class SearchScreen extends React.Component {
   static contextType = AuthContext;
@@ -20,9 +20,10 @@ export default class SearchScreen extends React.Component {
   render() {
     return (
       <View>
-        <TextInput
+        <Input
           placeholder="Search on Tournesol"
           onSubmitEditing={(e) => this.search(e.nativeEvent.text)}
+          leftIcon={{ name: 'search', type: 'material' }}
         />
         { (this.state.result != null) ?
         <FlatList

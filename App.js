@@ -15,8 +15,8 @@ const HomeStack = createStackNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator headerMode="none">
-      <HomeStack.Screen id="home" name="Home" component={HomeScreen} />
-      <HomeStack.Screen id="login" name="Login" component={LoginScreen} />
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="Login" component={LoginScreen} />
     </HomeStack.Navigator>
   );
 }
@@ -111,7 +111,7 @@ export default function App() {
               {name: "Rate", icon: "functions", component: RateScreen, authRequired: true},
               {name: "Profile", icon: "person", component: ProfileScreen, authRequired: true},
             ].map(({name, icon, component, authRequired = false}) =>
-            <Tab.Screen id={name} name={name} component={(authRequired && !authState.token) ? LoginScreen : component} options={{
+            <Tab.Screen key={name} name={name} component={(authRequired && !authState.token) ? LoginScreen : component} options={{
               tabBarIcon: ({ color, size }) => (
                 <Icon name={icon} color={color} size={size} />
               ),

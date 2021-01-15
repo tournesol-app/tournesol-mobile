@@ -1,6 +1,7 @@
 import React from 'react';
-import { FlatList, Image, Text, TextInput, View } from 'react-native';
+import { FlatList, Linking, TextInput, View } from 'react-native';
 import { AuthContext } from '../AuthContext';
+import { Avatar, ListItem, Text } from 'react-native-elements';
 
 export default class SearchScreen extends React.Component {
   static contextType = AuthContext;
@@ -28,20 +29,17 @@ export default class SearchScreen extends React.Component {
           data={this.state.result.results}
           renderItem={
             ({item}) =>
-            <View
-              id={item.id}
-              style={{
-                flexDirection: "row",
-                height: 100,
-                padding: 20
-              }}
-            >
-              <Image source={{uri: `https://img.youtube.com/vi/${item.video_id}/default.jpg`}} style={{resizeMode: "contain", width: 100, height: 100}} />
-              <Text style={{flex: 0.6}}>
-                <Text style={{flexWrap: 'wrap'}}>{item.name}{"\n"}</Text>
-                <Text>Score : {item.score.toFixed(0)}</Text>
-              </Text>
-            </View>
+            <ListItem bottomDivider>
+              <Avatar
+                source={{uri: `https://img.youtube.com/vi/${item.video_id}/default.jpg`}}
+                size='medium' icon={{name: 'play-circle-filled'}}
+                onPress={() => {Linking.openURL(`https://www.youtube.com/watch?v=${item.video_id}`)}}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{item.name}</ListItem.Title>
+                <ListItem.Subtitle>Score : {item.score.toFixed(0)}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
           }
           keyExtractor={item => item.id.toString()}
         />

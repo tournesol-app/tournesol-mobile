@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Linking, Text, View } from 'react-native';
-import YouTube from 'react-native-youtube';
+import { Linking, View } from 'react-native';
 import Config from "react-native-config";
-import { Button } from 'react-native-elements';
+import { Button, Text, Tile } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
 
@@ -11,15 +10,14 @@ export default function HomeScreen({ navigation }) {
     <AuthContext.Consumer>
       {auth =>
       <View>
-        <YouTube
-          videoId="1J7h3F-nKus"
-          apiKey={Config.YOUTUBE_API_KEY}
-          play={false} // control playback of video with true/false
-          fullscreen={false} // control whether the video should play in fullscreen or inline
-          loop={false} // control whether the video should loop when ended
-          style={{ marginTop: 10, alignSelf: "center", height: 300, width: "90%" }}
-          resumePlayAndroid={false}
-        />
+        <View style={{justifyContent: 'center', flexDirection: 'row'}}>
+          <Tile
+            imageSrc={{uri: `https://img.youtube.com/vi/${Config.TOURNESOL_YOUTUBE_VIDEO_ID}/mqdefault.jpg`}}
+            imageProps={{resizeMode: 'contain'}}
+            icon={{ name: 'play-circle-filled', type: 'material', size: 45 }}
+            onPress={() => {Linking.openURL(`https://www.youtube.com/watch?v=${Config.TOURNESOL_YOUTUBE_VIDEO_ID}`)}}
+          />
+        </View>
         <Text>
           Tournesol elicits and exploits contributors' inputs to identify top quality contents.
           Learn more with our <Text style={{color: 'red'}} onPress={() => {Linking.openURL('https://bit.ly/tournesol-app')}}>White Paper</Text> or

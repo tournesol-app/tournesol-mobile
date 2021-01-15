@@ -54,8 +54,8 @@ export default class ProfileScreen extends React.Component {
               <Avatar
                 rounded
                 size="medium"
-                title="?"
                 source={this.state.profile.avatar && { uri: this.state.profile.avatar }}
+                icon={{name: 'person'}}
               />
               <Text h4 style={{marginLeft: 25}}>{this.state.profile.first_name} {this.state.profile.last_name}</Text>
             </View>
@@ -68,7 +68,7 @@ export default class ProfileScreen extends React.Component {
                   {label: "Videos", count: this.state.profile.n_videos},
                   {label: "Comments", count: this.state.profile.n_comments},
                   {label: "Likes", count: this.state.profile.n_likes},
-                ].map(({label, count}) => <Text id={label} style={{padding: 3}}>{label} <Badge value={count} /></Text>)}
+                ].map(({label, count}) => <Text key={label} style={{padding: 3}}>{label} <Badge value={count} /></Text>)}
               </View>
             </View>
             <View style={{ alignSelf: 'center', padding: 20 }}>

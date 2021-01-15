@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Header, Icon, Text } from 'react-native-elements';
 
 import { AuthContext } from './src/AuthContext';
 import { HomeScreen, LoginScreen, ProfileScreen, RateScreen, SearchScreen } from './src/components';
@@ -16,8 +15,8 @@ const HomeStack = createStackNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator headerMode="none">
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="Login" component={LoginScreen} />
+      <HomeStack.Screen id="home" name="Home" component={HomeScreen} />
+      <HomeStack.Screen id="login" name="Login" component={LoginScreen} />
     </HomeStack.Navigator>
   );
 }
@@ -93,7 +92,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthContext.Provider value={authContext}>
-        <Text style={{fontWeight: "bold", fontSize: 18, textAlign: "center", marginTop: 0, width: "100%", backgroundColor: "yellow"}}>🌻 Tournesol</Text>
+        <Header
+          centerComponent={<Text h4>🌻 Tournesol</Text>}
+          backgroundColor='yellow'
+          statusBarProps={{hidden: true}}
+        />
         <Tab.Navigator
           tabBarOptions={{
             activeTintColor: 'tomato',
@@ -104,13 +107,13 @@ export default function App() {
           {
             [
               {name: "Home", icon: "home", component: HomeStackScreen},
-              {name: "Search", icon: "magnify", component: SearchScreen, authRequired: true},
-              {name: "Rate", icon: "sigma", component: RateScreen, authRequired: true},
-              {name: "Profile", icon: "account", component: ProfileScreen, authRequired: true},
+              {name: "Search", icon: "search", component: SearchScreen, authRequired: true},
+              {name: "Rate", icon: "functions", component: RateScreen, authRequired: true},
+              {name: "Profile", icon: "person", component: ProfileScreen, authRequired: true},
             ].map(({name, icon, component, authRequired = false}) =>
             <Tab.Screen id={name} name={name} component={(authRequired && !authState.token) ? LoginScreen : component} options={{
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name={icon} color={color} size={size} />
+                <Icon name={icon} color={color} size={size} />
               ),
             }} />
           )}

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ActivityIndicator, Button, Image, Text, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { ActivityIndicator, View } from 'react-native';
+import { Avatar, Badge, Button, Divider, Icon, SocialIcon, Text } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
 
@@ -42,23 +42,36 @@ export default class ProfileScreen extends React.Component {
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
         : <View>
-            <View style={{
-              borderBottomColor: 'black',
-              borderBottomWidth: 1,
-            }}>
+            <View>
               {
                 (this.state.profile == null)
                   ? <Text>Loading...</Text>
-                  : <Text><Icon name="person"></Icon> {this.state.profile.username}</Text>
+                  : <Text h4><Icon name="person" /> {this.state.profile.username}</Text>
               }
+            </View>
+            <Divider style={{ backgroundColor: 'black', marginBottom: 10 }} />
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              <Avatar
+                rounded
+                size="medium"
+                title="?"
+                source={this.state.profile.avatar && { uri: this.state.profile.avatar }}
+              />
+              <Text h4 style={{marginLeft: 25}}>{this.state.profile.first_name} {this.state.profile.last_name}</Text>
             </View>
             <View>
-              {
-                this.state.profile.avatar != null && <Image source={{uri: this.state.profile.avatar}} style={{resizeMode: "contain", width: 100, height: 100}} />
-              }
-              <Text>{this.state.profile.first_name} {this.state.profile.last_name}</Text>
+              <Text style={{fontWeight: 'bold'}}>{this.state.profile.title}</Text>
+              <Text style={{marginLeft: 25, fontStyle: 'italic'}}>{this.state.profile.bio}</Text>
+              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                {[
+                  {label: "Ratings", count: this.state.profile.n_ratings},
+                  {label: "Videos", count: this.state.profile.n_videos},
+                  {label: "Comments", count: this.state.profile.n_comments},
+                  {label: "Likes", count: this.state.profile.n_likes},
+                ].map(({label, count}) => <Text id={label} style={{padding: 3}}>{label} <Badge value={count} /></Text>)}
+              </View>
             </View>
-            <View style={{ alignSelf: 'center', padding: 12 }}>
+            <View style={{ alignSelf: 'center', padding: 20 }}>
               <Button title="Log Out" onPress={() => this.signOut()} />
             </View>
           </View>

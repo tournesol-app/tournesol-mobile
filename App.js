@@ -104,11 +104,11 @@ export default function App() {
           {
             [
               {name: "Home", icon: "home", component: HomeStackScreen},
-              {name: "Search", icon: "magnify", component: SearchScreen},
-              {name: "Rate", icon: "sigma", component: RateScreen},
-              {name: "Profile", icon: "account", component: ProfileScreen},
-            ].map(({name, icon, component}) =>
-            <Tab.Screen name={name} component={component} options={{
+              {name: "Search", icon: "magnify", component: SearchScreen, authRequired: true},
+              {name: "Rate", icon: "sigma", component: RateScreen, authRequired: true},
+              {name: "Profile", icon: "account", component: ProfileScreen, authRequired: true},
+            ].map(({name, icon, component, authRequired = false}) =>
+            <Tab.Screen id={name} name={name} component={(authRequired && !authState.token) ? LoginScreen : component} options={{
               tabBarIcon: ({ color, size }) => (
                 <MaterialCommunityIcons name={icon} color={color} size={size} />
               ),

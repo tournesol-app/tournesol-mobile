@@ -30,7 +30,7 @@ export default class ProfileScreen extends React.Component {
     this.loadProfile();
   }
   componentDidUpdate() {
-    if (this.state.profile.username != this.context.state.username) {
+    if (this.state.profile && this.state.profile.username != this.context.state.username) {
       this.loadProfile();
     }
   }

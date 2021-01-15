@@ -54,7 +54,7 @@ export default class ProfileScreen extends React.Component {
             </View>
             <View>
               {
-                this.state.profile.avatar != null && <Image source={{uri: this.state.profile.avatar}} style={{resizeMode: "contain", width: 100, height: 100}}></Image>
+                this.state.profile.avatar != null && <Image source={{uri: this.state.profile.avatar}} style={{resizeMode: "contain", width: 100, height: 100}} />
               }
               <Text>{this.state.profile.first_name} {this.state.profile.last_name}</Text>
             </View>

@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import { FlatList, Text, TextInput, View } from 'react-native';
-import YouTube from 'react-native-youtube';
-import Config from "react-native-config";
-
+import React from 'react';
+import { FlatList, Image, Text, TextInput, View } from 'react-native';
 import { AuthContext } from '../AuthContext';
 
 export default class SearchScreen extends React.Component {
@@ -32,21 +29,14 @@ export default class SearchScreen extends React.Component {
           renderItem={
             ({item}) =>
             <View
+              id={item.id}
               style={{
                 flexDirection: "row",
                 height: 100,
                 padding: 20
               }}
             >
-              <YouTube
-                videoId={item.video_id}
-                apiKey={Config.YOUTUBE_API_KEY}
-                play={false} // control playback of video with true/false
-                fullscreen={false} // control whether the video should play in fullscreen or inline
-                loop={false} // control whether the video should loop when ended
-                style={{ flex: 0.4 }}
-                resumePlayAndroid={false}
-              />
+              <Image source={{uri: `https://img.youtube.com/vi/${item.video_id}/default.jpg`}} style={{resizeMode: "contain", width: 100, height: 100}} />
               <Text style={{flex: 0.6}}>
                 <Text style={{flexWrap: 'wrap'}}>{item.name}{"\n"}</Text>
                 <Text>Score : {item.score.toFixed(0)}</Text>

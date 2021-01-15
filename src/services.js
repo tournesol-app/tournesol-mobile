@@ -1,3 +1,5 @@
+import Config from "react-native-config";
+
 export class APIClient {
   constructor(authToken = null, username = null) {
     this.authToken = authToken;
@@ -18,7 +20,7 @@ export class APIClient {
       if (this.authToken !== null) {
         data['headers']['Authorization'] = `Token ${this.authToken}`;
       }
-      let url = `http://127.0.0.1:8000${endpoint}`;
+      let url = `${Config.BASE_API_URL}${endpoint}`;
       if (params != null) {
         url += `?${new URLSearchParams(params)}`
       }

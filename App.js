@@ -2,24 +2,13 @@ import * as React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import { Header, Icon, Text } from 'react-native-elements';
 
 import { AuthContext } from './src/AuthContext';
-import { HomeScreen, LoginScreen, ProfileScreen, RateScreen, SearchScreen } from './src/components';
+import { HomeStack, LoginScreen, ProfileScreen, RateScreen, SearchScreen } from './src/components';
 import { APIClient } from './src/services';
 
 const Tab = createBottomTabNavigator();
-const HomeStack = createStackNavigator();
-
-function HomeStackScreen() {
-  return (
-    <HomeStack.Navigator headerMode="none">
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="Login" component={LoginScreen} />
-    </HomeStack.Navigator>
-  );
-}
 
 export default function App() {
   const [authState, dispatch] = React.useReducer(
@@ -94,6 +83,7 @@ export default function App() {
       <AuthContext.Provider value={authContext}>
         <Header
           centerComponent={<Text h4>🌻 Tournesol</Text>}
+          rightComponent={<Icon name='menu' onPress={() => authContext.signOut()} />}
           backgroundColor='yellow'
           statusBarProps={{hidden: true}}
         />
@@ -106,7 +96,7 @@ export default function App() {
         >
           {
             [
-              {name: "Home", icon: "home", component: HomeStackScreen},
+              {name: "Home", icon: "home", component: HomeStack},
               {name: "Search", icon: "search", component: SearchScreen, authRequired: true},
               {name: "Rate", icon: "functions", component: RateScreen, authRequired: true},
               {name: "Profile", icon: "person", component: ProfileScreen, authRequired: true},

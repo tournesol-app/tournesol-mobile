@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Header, Icon, Text } from 'react-native-elements';
 
 import { AuthContext } from './src/AuthContext';
-import { HomeStack, LoginScreen, ProfileScreen, RateScreen, SearchScreen } from './src/components';
+import { HomeStack, LoginScreen, ProfileScreen, RateScreen, VideoStack } from './src/components';
 import { APIClient } from './src/services';
 
 const Tab = createBottomTabNavigator();
@@ -96,8 +96,8 @@ export default function App() {
         >
           {
             [
-              {name: "Home", icon: "home", component: HomeStack},
-              {name: "Search", icon: "search", component: SearchScreen, authRequired: true},
+              {name: "Default", icon: "home", component: HomeStack},
+              {name: "Videos", icon: "search", component: VideoStack, authRequired: true},
               {name: "Rate", icon: "functions", component: RateScreen, authRequired: true},
               {name: "Profile", icon: "person", component: ProfileScreen, authRequired: true},
             ].map(({name, icon, component, authRequired = false}) =>

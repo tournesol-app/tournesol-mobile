@@ -62,4 +62,21 @@ export class APIClient {
     );
     return response;
   }
+
+  async fetchVideo(video_id) {
+    console.log("Search video", video_id);
+    const response = await this.request(
+      '/api/v2/videos/search_tournesol/',
+      'GET',
+      {
+        video_id: video_id
+      }
+    );
+    console.log("Search video result", response);
+    if (response.count == 1) {
+      return response.results[0];
+    } else {
+      console.log(`${response.count} results for video_id=${video_id}`);
+    }
+  }
 }

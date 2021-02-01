@@ -8,7 +8,7 @@ const HomeStack = createStackNavigator();
 
 export default function HomeStackScreen() {
   return (
-    <HomeStack.Navigator headerMode="none">
+    <HomeStack.Navigator initialRouteName="Home" headerMode="none">
       <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="Login" component={LoginScreen} />
     </HomeStack.Navigator>

@@ -30,7 +30,7 @@ export default function HomeScreen({ navigation }) {
             : <Button title="Log In" onPress={() => navigation.navigate('Login')} />
         }
         </View>
-        <Text>Pouet: {auth.state.token}</Text>
+        <Text>Bla bla bla...</Text>
       </View>
       }
     </AuthContext.Consumer>

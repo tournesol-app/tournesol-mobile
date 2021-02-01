@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { Avatar, Badge, Button, Divider, Icon, SocialIcon, Text } from 'react-native-elements';
+import { Avatar, Badge, Button, Divider, Icon, Text } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
 

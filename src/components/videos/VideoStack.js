@@ -10,7 +10,7 @@ export default function VideoStackScreen() {
   return (
     <VideoStack.Navigator headerMode="screen" initialRouteName="Search">
       <VideoStack.Screen name="Search" component={SearchScreen} options={{headerShown: false}} />
-      <VideoStack.Screen name="Details" component={DetailsScreen} options={{headerTitle: "Détails"}} />
+      <VideoStack.Screen name="Details" component={DetailsScreen} options={{headerTitle: "Details"}} />
     </VideoStack.Navigator>
   );
 }

@@ -64,7 +64,6 @@ export class APIClient {
   }
 
   async fetchVideo(video_id) {
-    console.log("Search video", video_id);
     const response = await this.request(
       '/api/v2/videos/search_tournesol/',
       'GET',
@@ -78,5 +77,14 @@ export class APIClient {
     } else {
       console.log(`${response.count} results for video_id=${video_id}`);
     }
+  }
+
+  async fetchStatistics() {
+    console.log("fetchStatistics BEFORE")
+    const response = await this.request(
+      '/api/v2/statistics/view/',
+      'GET',
+    );
+    return response;
   }
 }

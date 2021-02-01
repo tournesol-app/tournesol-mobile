@@ -1,26 +1,40 @@
 import React from 'react';
-import { ImageBackground, Linking, View } from 'react-native';
+import { ImageBackground, Linking, ScrollView, View } from 'react-native';
+import * as Progress from 'react-native-progress';
+import { Divider, Icon, ListItem, Text } from 'react-native-elements';
 import { AuthContext } from '../../AuthContext';
-import { Divider, Icon, Text } from 'react-native-elements';
 
 export default class DetailsScreen extends React.Component {
+  criteria = ['reliability', 'importance', 'engaging', 'pedagogy', 'layman_friendly', 'diversity_inclusion', 'backfire_risk'];
   static contextType = AuthContext;
   constructor(props) {
     super(props);
     this.state = {
-      video: null
+      video: null,
+      stats: null,
     };
   }
   componentDidMount() {
     this.fetchVideo();
+    this.fetchStatistics();
   }
   async fetchVideo() {
     const response = await this.context.getClient().fetchVideo(this.props.route.params.video_id);
     if (response != null) this.setState({video: response});
   }
+  async fetchStatistics() {
+    const response = await this.context.getClient().fetchStatistics();
+    if (response != null) this.setState({stats: response});
+  }
+
+  percentScore(criteria) {
+    const minScore = this.state.stats.min_score || 0;
+    return (this.state.video[criteria] - minScore) / (this.state.stats.max_score - minScore);
+  }
+
   render() {
     return (
-      <View>
+      <ScrollView>
         {(this.state.video)
           ? <View>
               <Text h4>{this.state.video.name}</Text>
@@ -35,10 +49,22 @@ export default class DetailsScreen extends React.Component {
                         onPress={() => {Linking.openURL(`https://www.youtube.com/watch?v=${this.state.video.video_id}`)}} />
                 </ImageBackground>
               </View>
+              <Text h4>Ratings</Text>
+              <View>
+                {this.criteria.map((c) =>
+                  <View key={c} style={{padding: 10}}>
+                    <Text>{c}</Text>
+                    { (this.state.stats != null)
+                      ? <Progress.Bar progress={this.percentScore(c)} width={200} />
+                      : <Text>{this.state.video[c]}</Text>
+                    }
+                  </View>
+                )}
+              </View>
             </View>
-          : <Text>Aucune vidéo trouvée.</Text>
+          : <Text>No video found.</Text>
         }
-      </View>
+      </ScrollView>
     )
   }
 }

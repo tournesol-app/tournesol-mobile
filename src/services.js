@@ -80,7 +80,6 @@ export class APIClient {
   }
 
   async fetchStatistics() {
-    console.log("fetchStatistics BEFORE")
     const response = await this.request(
       '/api/v2/statistics/view/',
       'GET',

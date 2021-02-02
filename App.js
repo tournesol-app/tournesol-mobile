@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -58,6 +59,16 @@ export default function App() {
     bootstrapAsync();
   }, []);
 
+  React.useEffect(() => {
+    Linking.addEventListener('url', event => {
+      console.warn('URL', event.url)
+    })
+
+    Linking.getInitialURL().then(url => {
+        console.warn('INITIAL', url)
+    })
+  })
+
   const authContext = {
     state: authState,
     getClient: function() {
@@ -78,8 +89,21 @@ export default function App() {
     },
   }
 
+  const linking = {
+    prefixes: ['tournesol://'],
+    config: {
+      screens: {
+        Videos: {
+          screens: {
+            Details: 'video/:video_id',
+          },
+        },
+      }
+    }
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <AuthContext.Provider value={authContext}>
         <Header
           centerComponent={<Text h4>🌻 Tournesol</Text>}

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Button, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
+import { Button } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
 

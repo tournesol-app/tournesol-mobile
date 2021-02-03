@@ -1,7 +1,7 @@
 import React from 'react';
 import { ImageBackground, Linking, ScrollView, View } from 'react-native';
 import * as Progress from 'react-native-progress';
-import { Divider, Icon, ListItem, Text } from 'react-native-elements';
+import { Button, Divider, Icon, Text } from 'react-native-elements';
 import { AuthContext } from '../../AuthContext';
 
 export default class DetailsScreen extends React.Component {
@@ -51,6 +51,14 @@ export default class DetailsScreen extends React.Component {
               </View>
               <Text h4>Ratings</Text>
               <View>
+                <View style={{ alignSelf: 'center', padding: 20 }}>
+                  <Button title="Rate"
+                    icon={<Icon name="functions" />}
+                    onPress={() => {
+                      this.props.navigation.navigate('Rate', {video_id: this.state.video.video_id});
+                    }}
+                  />
+                </View>
                 {this.criteria.map((c) =>
                   <View key={c} style={{padding: 10}}>
                     <Text>{c}</Text>
@@ -61,6 +69,7 @@ export default class DetailsScreen extends React.Component {
                   </View>
                 )}
               </View>
+              <Text h4>Comments</Text>
             </View>
           : <Text>No video found.</Text>
         }

@@ -2,24 +2,6 @@ import * as React from 'react';
 import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Divider, Icon, Slider, Text } from 'react-native-elements';
 
-const sliderStyle = StyleSheet.create({
-  track: {
-    height: 14,
-    borderRadius: 2,
-    backgroundColor: 'white',
-    borderColor: '#9a9a9a',
-    borderWidth: 1,
-  },
-  thumb: {
-    width: 20,
-    height: 20,
-    borderRadius: 2,
-    backgroundColor: '#eaeaea',
-    borderColor: '#9a9a9a',
-    borderWidth: 1,
-  }
-});
-
 function RatedVideo({video_id, title}) {
   return (
   <View style={{flex: 0.5, paddingHorizontal: 10}}>
@@ -65,7 +47,7 @@ export default class RateScreen extends React.Component {
           {this.criteria.map((c) =>
           <View key={c} style={{ width: '90%', alignSelf: 'center' }}>
             <Text style={{textAlign: 'center'}}>{c}</Text>
-            <Slider trackStyle={sliderStyle.track} thumbStyle={sliderStyle.thumb} value={0.5} />
+            <Slider value={0.5} />
           </View>
           )}
           <View style={{ alignSelf: 'center', padding: 20 }}>

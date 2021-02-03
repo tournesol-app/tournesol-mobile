@@ -3,6 +3,7 @@ import { ImageBackground, Linking, ScrollView, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { Button, Divider, Icon, Text } from 'react-native-elements';
 import { AuthContext } from '../../AuthContext';
+import theme from '../../theme';
 
 export default class DetailsScreen extends React.Component {
   criteria = ['reliability', 'importance', 'engaging', 'pedagogy', 'layman_friendly', 'diversity_inclusion', 'backfire_risk'];
@@ -53,7 +54,7 @@ export default class DetailsScreen extends React.Component {
               <View>
                 <View style={{ alignSelf: 'center', padding: 20 }}>
                   <Button title="Rate"
-                    icon={<Icon name="functions" />}
+                    icon={<Icon name="functions" color={theme.colors.secondary} />}
                     onPress={() => {
                       this.props.navigation.navigate('Rate', {video_id: this.state.video.video_id});
                     }}
@@ -63,7 +64,7 @@ export default class DetailsScreen extends React.Component {
                   <View key={c} style={{padding: 10}}>
                     <Text>{c}</Text>
                     { (this.state.stats != null)
-                      ? <Progress.Bar progress={this.percentScore(c)} width={200} />
+                      ? <Progress.Bar progress={this.percentScore(c)} width={200} color={theme.colors.primary} borderColor={theme.colors.grey0} />
                       : <Text>{this.state.video[c]}</Text>
                     }
                   </View>

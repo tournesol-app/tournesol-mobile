@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Divider, Icon, Slider, Text } from 'react-native-elements';
+import { ImageBackground, Linking, ScrollView, View } from 'react-native';
+import { Button, Divider, Icon, Overlay, Slider, Text } from 'react-native-elements';
 
 function RatedVideo({video_id, title}) {
   return (
@@ -17,6 +17,49 @@ function RatedVideo({video_id, title}) {
   </View>)
 }
 
+class CriteriaSlider extends React.Component {
+  tips = {
+    similar: <Text>Videos are similar</Text>,
+    better: (side) => <Text>{side} video is better</Text>,
+    much_better: (side) => <Text>{side} video is a lot better</Text>,
+  }
+  constructor(props) {
+    super(props);
+    this.state = {
+      score: 0.5
+    };
+  }
+  getHelpText(score) {
+    for (const video of [
+      {
+        side: "Left",
+        score: score,
+      },
+      {
+        side: "Right",
+        score: 1 - score
+      }
+    ]) {
+      if (video.score < 0.25)
+        return this.tips.much_better(video.side);
+      else if (video.score < 0.4)
+        return this.tips.better(video.side);
+    }
+    return this.tips.similar;
+  }
+  render() {
+    return (
+      <View style={{ width: '90%', alignSelf: 'center' }}>
+        <Text style={{textAlign: 'center'}}>
+          <Text style={{ fontWeight: 'bold' }}>{this.props.criteria}: </Text>
+          {this.getHelpText(this.state.score)}
+        </Text>
+        <Slider value={this.state.score} onValueChange={(v) => this.setState({score: v})} />
+      </View>
+    )
+  }
+}
+
 export default class RateScreen extends React.Component {
   criteria = ['reliability', 'importance', 'engaging', 'pedagogy', 'layman_friendly', 'diversity_inclusion', 'backfire_risk'];
   constructor(props) {
@@ -30,6 +73,7 @@ export default class RateScreen extends React.Component {
         video_id: 'j05xm-8_wjc',
         title: "Et ceci en est une autre..."
       },
+      showHelp: false
     };
   }
   render() {
@@ -43,13 +87,12 @@ export default class RateScreen extends React.Component {
         <View>
           <Text h4>
             Compare those videos
+            <Overlay isVisible={this.state.showHelp} onBackdropPress={() => this.setState({showHelp: false})}>
+              <Text>For each criteria, move the cursor on the left or the right side of the screen if you think that the corresponding video is doing better.</Text>
+            </Overlay>
+            <Icon name='help-outline' onPress={() => this.setState({showHelp: !this.state.showHelp})} />
           </Text>
-          {this.criteria.map((c) =>
-          <View key={c} style={{ width: '90%', alignSelf: 'center' }}>
-            <Text style={{textAlign: 'center'}}>{c}</Text>
-            <Slider value={0.5} />
-          </View>
-          )}
+          {this.criteria.map((c) => <CriteriaSlider key={c} criteria={c}/>)}
           <View style={{ alignSelf: 'center', padding: 20 }}>
             <Button title="Submit rating" />
           </View>

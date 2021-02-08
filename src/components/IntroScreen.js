@@ -5,7 +5,7 @@ import { Button, Text, Tile } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
 
-export default function HomeScreen({ navigation }) {
+export default function IntroScreen({ navigation }) {
   return (
     <AuthContext.Consumer>
       {auth =>

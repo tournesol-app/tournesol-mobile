@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, Linking, View } from 'react-native';
-import { AuthContext } from '../../AuthContext';
+import { AuthContext } from '../AuthContext';
 import { Avatar, ListItem, Input, Text } from 'react-native-elements';
 
 export default class SearchScreen extends React.Component {

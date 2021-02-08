@@ -2,8 +2,8 @@ import React from 'react';
 import { ImageBackground, Linking, ScrollView, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { Button, Divider, Icon, Text } from 'react-native-elements';
-import { AuthContext } from '../../AuthContext';
-import theme from '../../theme';
+import { AuthContext } from '../AuthContext';
+import theme from '../theme';
 
 export default class DetailsScreen extends React.Component {
   criteria = ['reliability', 'importance', 'engaging', 'pedagogy', 'layman_friendly', 'diversity_inclusion', 'backfire_risk'];

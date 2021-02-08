@@ -1,15 +1,17 @@
 import * as React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Header, Icon, Text, ThemeProvider } from 'react-native-elements';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import { AuthContext } from './src/AuthContext';
-import { HomeStack, LoginScreen, ProfileScreen, RateScreen, VideoStack } from './src/components';
 import { APIClient } from './src/services';
+import { DetailsScreen, LoginScreen } from './src/components';
+import HomeTabs from './src/components/HomeTabs';
 import theme from './src/theme';
 
-const Tab = createBottomTabNavigator();
+
+const RootStack = createStackNavigator();
 
 export default function App() {
   const [authState, dispatch] = React.useReducer(
@@ -89,27 +91,11 @@ export default function App() {
             backgroundColor={theme.colors.primary}
             statusBarProps={{hidden: true}}
           />
-          <Tab.Navigator
-            tabBarOptions={{
-              activeTintColor: theme.colors.secondary,
-              inactiveTintColor: theme.colors.grey1,
-              style: { backgroundColor: theme.colors.primary}
-            }}
-          >
-            {
-              [
-                {name: "Default", icon: "home", component: HomeStack},
-                {name: "Videos", icon: "search", component: VideoStack, authRequired: true},
-                {name: "Rate", icon: "functions", component: RateScreen, authRequired: true},
-                {name: "Profile", icon: "person", component: ProfileScreen, authRequired: true},
-              ].map(({name, icon, component, authRequired = false}) =>
-              <Tab.Screen key={name} name={name} component={(authRequired && !authState.token) ? LoginScreen : component} options={{
-                tabBarIcon: ({ color, size }) => (
-                  <Icon name={icon} color={color} size={size} />
-                ),
-              }} />
-            )}
-          </Tab.Navigator>
+          <RootStack.Navigator>
+            <RootStack.Screen name="HomeTabs" component={HomeTabs} options={{headerShown: false}} />
+            <RootStack.Screen name="Details" component={DetailsScreen} options={{headerTitle: "Details"}} />
+            <RootStack.Screen name="Login" component={LoginScreen} options={{headerTitle: "Login"}} />
+          </RootStack.Navigator>
         </ThemeProvider>
       </AuthContext.Provider>
     </NavigationContainer>

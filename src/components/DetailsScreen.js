@@ -72,7 +72,14 @@ export default class DetailsScreen extends React.Component {
               </View>
               <Text h4>Comments</Text>
             </View>
-          : <Text>No video found.</Text>
+          : <View>
+              <Text>No video found (id: {this.props.route.params.video_id}).</Text>
+              <Button title="Home"
+                onPress={() => {
+                  this.props.navigation.navigate('Home');
+                }}
+              />
+            </View>
         }
       </ScrollView>
     )

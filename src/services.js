@@ -71,7 +71,6 @@ export class APIClient {
         video_id: video_id
       }
     );
-    console.log("Search video result", response);
     if (response.count == 1) {
       return response.results[0];
     } else {

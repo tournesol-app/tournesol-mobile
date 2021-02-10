@@ -78,6 +78,18 @@ export class APIClient {
     }
   }
 
+  async createVideo(video_id) {
+    const response = await this.request(
+      '/api/v2/videos/',
+      'POST',
+      null,
+      {
+        video_id: video_id
+      }
+    );
+    return response;
+  }
+
   async fetchStatistics() {
     const response = await this.request(
       '/api/v2/statistics/view/',

@@ -20,8 +20,9 @@ export default class DetailsScreen extends React.Component {
     this.fetchStatistics();
   }
   async fetchVideo() {
-    const response = await this.context.getClient().fetchVideo(this.props.route.params.video_id);
-    if (response != null) this.setState({video: response});
+    let response = await this.context.getClient().fetchVideo(this.props.route.params.video_id);
+    if (response == null) response = await this.context.getClient().createVideo(this.props.route.params.video_id);
+    this.setState({video: response});
   }
   async fetchStatistics() {
     const response = await this.context.getClient().fetchStatistics();
@@ -56,7 +57,7 @@ export default class DetailsScreen extends React.Component {
                   <Button title="Rate"
                     icon={<Icon name="functions" color={theme.colors.secondary} />}
                     onPress={() => {
-                      this.props.navigation.navigate('Rate', {video_id: this.state.video.video_id});
+                      this.props.navigation.navigate('Home', {screen: 'Rate', video_id: this.state.video.video_id});
                     }}
                   />
                 </View>

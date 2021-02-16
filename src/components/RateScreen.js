@@ -2,6 +2,8 @@ import * as React from 'react';
 import { ImageBackground, Linking, ScrollView, View } from 'react-native';
 import { Button, Divider, Icon, Overlay, Slider, Text } from 'react-native-elements';
 
+import { AuthContext } from '../AuthContext';
+
 function RatedVideo({video_id, title}) {
   return (
   <View style={{flex: 0.5, paddingHorizontal: 10}}>
@@ -61,20 +63,33 @@ class CriteriaSlider extends React.Component {
 }
 
 export default class RateScreen extends React.Component {
+  static contextType = AuthContext;
   criteria = ['reliability', 'importance', 'engaging', 'pedagogy', 'layman_friendly', 'diversity_inclusion', 'backfire_risk'];
   constructor(props) {
     super(props);
     this.state = {
       video1: {
-        video_id: 'HZGCoVF3YvM',
-        title: "Ceci est une vidéo."
+        title: "Loading.."
       },
       video2: {
-        video_id: 'j05xm-8_wjc',
-        title: "Et ceci en est une autre..."
+        title: "Loading..."
       },
       showHelp: false
     };
+  }
+  async componentDidMount() {
+    const video1 = await this.context.getClient().fetchVideo('cebFWOlx848');  // FIXME: this.props.route.params.video_id
+    const video2 = await this.context.getClient().sampleVideo('cebFWOlx848'); // FIXME: this.props.route.params.video_id
+    this.setState({
+      video1: {
+        title: video1.name,
+        video_id: video1.video_id,
+      },
+      video2: {
+        title: video2.name,
+        video_id: video2.video_id,
+      },
+    });
   }
   render() {
     return (

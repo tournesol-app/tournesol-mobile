@@ -97,4 +97,15 @@ export class APIClient {
     );
     return response;
   }
+
+  async sampleVideo(other_id) {
+    const response = await this.request(
+      '/api/v2/expert_ratings/sample_video_with_other/',
+      'GET',
+      {
+        video_other: other_id
+      }
+    );
+    return response;
+  }
 }

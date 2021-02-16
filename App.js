@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NativeEventEmitter, NativeModules } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { Header, Icon, Text, ThemeProvider } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -57,7 +57,7 @@ export default function App(props) {
       let userData;
 
       try {
-        userData = await AsyncStorage.getItem('userData');
+        userData = await EncryptedStorage.getItem('userData');
       } catch (e) {
         console.error("Error while fetching token from local data");
       }
@@ -75,16 +75,12 @@ export default function App(props) {
       return new APIClient(this.state.token, this.state.username);
     },
     signIn: async function (username, password) {
-      // In a production app, we need to send some data (usually username, password) to server and get a token
-      // We will also need to handle errors if sign in failed
-      // After getting token, we need to persist the token using `AsyncStorage`
-      // In the example, we'll use a dummy token
       const token = await this.getClient().authenticate(username, password);
-      await AsyncStorage.setItem('userData', JSON.stringify({token, username}));
+      await EncryptedStorage.setItem('userData', JSON.stringify({token, username}));
       authDispatch({ type: 'SIGN_IN', token: token, username: username, });
     },
     signOut: async () => {
-      await AsyncStorage.removeItem('userData');
+      await EncryptedStorage.removeItem('userData');
       authDispatch({ type: 'SIGN_OUT' });
     },
   }

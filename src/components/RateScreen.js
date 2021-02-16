@@ -78,8 +78,8 @@ export default class RateScreen extends React.Component {
     };
   }
   async componentDidMount() {
-    const video1 = await this.context.getClient().fetchVideo('cebFWOlx848');  // FIXME: this.props.route.params.video_id
-    const video2 = await this.context.getClient().sampleVideo('cebFWOlx848'); // FIXME: this.props.route.params.video_id
+    const video1 = await this.context.getClient().fetchVideo('DXUAyRRkI6k');  // FIXME: this.props.route.params.video_id
+    const video2 = await this.context.getClient().sampleVideo('DXUAyRRkI6k'); // FIXME: this.props.route.params.video_id
     this.setState({
       video1: {
         title: video1.name,

@@ -57,7 +57,7 @@ export default class DetailsScreen extends React.Component {
                   <Button title="Rate"
                     icon={<Icon name="functions" color={theme.colors.secondary} />}
                     onPress={() => {
-                      this.props.navigation.navigate('Home', {screen: 'Rate', video_id: this.state.video.video_id});
+                      this.props.navigation.navigate('RateVideo', {video_id: this.state.video.video_id});
                     }}
                   />
                 </View>

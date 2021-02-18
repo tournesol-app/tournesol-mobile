@@ -4,7 +4,7 @@ import { Button, Divider, Icon, Overlay, Slider, Text } from 'react-native-eleme
 
 import { AuthContext } from '../AuthContext';
 
-function RatedVideo({video_id, title}) {
+function RatedVideo({video_id, name}) {
   return (
   <View style={{flex: 0.5, paddingHorizontal: 10}}>
     <ImageBackground
@@ -15,7 +15,7 @@ function RatedVideo({video_id, title}) {
       <Icon name='play-circle-outline' size={40}
             onPress={() => {Linking.openURL(`https://www.youtube.com/watch?v=${video_id}`)}} />
     </ImageBackground>
-    <Text>{title}</Text>
+    <Text>{name}</Text>
   </View>)
 }
 
@@ -68,27 +68,22 @@ export default class RateScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      video_id: props.route.params ? props.route.params.video_id : null,
       video1: {
-        title: "Loading.."
+        name: "Loading.."
       },
       video2: {
-        title: "Loading..."
+        name: "Loading..."
       },
       showHelp: false
     };
   }
   async componentDidMount() {
-    const video1 = await this.context.getClient().fetchVideo('DXUAyRRkI6k');  // FIXME: this.props.route.params.video_id
-    const video2 = await this.context.getClient().sampleVideo('DXUAyRRkI6k'); // FIXME: this.props.route.params.video_id
+    const video1 = await ((this.state.video_id) ? this.context.getClient().fetchVideo(this.state.video_id) : this.context.getClient().sampleVideo());
+    const video2 = await this.context.getClient().sampleVideoWithOther(video1.video_id);
     this.setState({
-      video1: {
-        title: video1.name,
-        video_id: video1.video_id,
-      },
-      video2: {
-        title: video2.name,
-        video_id: video2.video_id,
-      },
+      video1: video1,
+      video2: video2,
     });
   }
   render() {

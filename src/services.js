@@ -98,7 +98,15 @@ export class APIClient {
     return response;
   }
 
-  async sampleVideo(other_id) {
+  async sampleVideo() {
+    const response = await this.request(
+      '/api/v2/expert_ratings/sample_video/',
+      'GET'
+    );
+    return response;
+  }
+
+  async sampleVideoWithOther(other_id) {
     const response = await this.request(
       '/api/v2/expert_ratings/sample_video_with_other/',
       'GET',

@@ -7,7 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { AuthContext } from './src/AuthContext';
 import { APIClient } from './src/services';
-import { DetailsScreen, LoginScreen } from './src/components';
+import { DetailsScreen, LoginScreen, RateScreen } from './src/components';
 import HomeTabs from './src/components/HomeTabs';
 import theme from './src/theme';
 import { navigationRef, isReadyRef, navigate } from './src/RootNavigation';
@@ -146,6 +146,7 @@ export default function App(props) {
             <RootStack.Screen name="Home" component={HomeTabs} options={{headerShown: false}} />
             <RootStack.Screen name="Details" component={DetailsScreen} options={{headerTitle: "Details"}} />
             <RootStack.Screen name="Login" component={LoginScreen} options={{headerTitle: "Login"}} />
+            <RootStack.Screen name="RateVideo" component={RateScreen} options={{headerShown: false}} />
           </RootStack.Navigator>
         </ThemeProvider>
       </AuthContext.Provider>

@@ -116,4 +116,26 @@ export class APIClient {
     );
     return response;
   }
+
+  async fetchConstants() {
+    const response = await this.request(
+      '/api/v2/constants/view_constants/',
+      'GET'
+    );
+    return response;
+  }
+
+  async rateVideos(video1, video2, ratings) {
+    const response = await this.request(
+      '/api/v2/expert_ratings/',
+      'POST',
+      null,
+      {
+        video_1: video1.video_id,
+        video_2: video2.video_id,
+        ...ratings
+      }
+    );
+    return response;
+  }
 }

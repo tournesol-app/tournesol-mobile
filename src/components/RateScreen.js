@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageBackground, Linking, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Alert, ImageBackground, Linking, ScrollView, View } from 'react-native';
 import { Button, Divider, Icon, Overlay, Slider, Text } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
@@ -19,7 +19,7 @@ function RatedVideo({video_id, name}) {
   </View>)
 }
 
-class CriteriaSlider extends React.Component {
+class FeatureSlider extends React.Component {
   tips = {
     similar: <Text>Videos are similar</Text>,
     better: (side) => <Text>{side} video is better</Text>,
@@ -51,12 +51,15 @@ class CriteriaSlider extends React.Component {
   }
   render() {
     return (
-      <View style={{ width: '90%', alignSelf: 'center' }}>
+      <View style={{ width: '90%', alignSelf: 'center', margin: 10 }}>
         <Text style={{textAlign: 'center'}}>
-          <Text style={{ fontWeight: 'bold' }}>{this.props.criteria}: </Text>
+          <Text style={{ fontWeight: 'bold' }}>{this.props.description}: </Text>
           {this.getHelpText(this.state.score)}
         </Text>
-        <Slider value={this.state.score} onValueChange={(v) => this.setState({score: v})} />
+        <Slider value={this.state.score} onValueChange={(v) => {
+          this.props.onChange(v);
+          this.setState({score: v});
+        }} />
       </View>
     )
   }
@@ -64,47 +67,74 @@ class CriteriaSlider extends React.Component {
 
 export default class RateScreen extends React.Component {
   static contextType = AuthContext;
-  criteria = ['reliability', 'importance', 'engaging', 'pedagogy', 'layman_friendly', 'diversity_inclusion', 'backfire_risk'];
   constructor(props) {
     super(props);
     this.state = {
-      video_id: props.route.params ? props.route.params.video_id : null,
-      video1: {
-        name: "Loading.."
-      },
-      video2: {
-        name: "Loading..."
-      },
       showHelp: false
-    };
+    }
   }
+
   async componentDidMount() {
-    const video1 = await ((this.state.video_id) ? this.context.getClient().fetchVideo(this.state.video_id) : this.context.getClient().sampleVideo());
+    const constants = await this.context.getClient().fetchConstants();
+    this.setState({
+      constants: constants
+    });
+    this.reload();
+    this.unsubscribe = this.props.navigation.addListener("focus", this.reload.bind(this));
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  async reload() {
+    const video_id = this.props.route.params ? this.props.route.params.video_id : null;
+    const video1 = await (video_id ? this.context.getClient().fetchVideo(video_id) : this.context.getClient().sampleVideo());
     const video2 = await this.context.getClient().sampleVideoWithOther(video1.video_id);
     this.setState({
       video1: video1,
       video2: video2,
+      ratings: {},
+      showHelp: false
     });
+    console.log("Rated videos", video1.video_id, video2.video_id);
+  }
+  updateRatings(feature, score) {
+    this.setState(prevState => {
+      prevState.ratings[feature] = 100 * score;
+      return prevState;
+    });
+  }
+  async submitRatings() {
+    const response = await this.context.getClient().rateVideos(this.state.video1, this.state.video2, this.state.ratings);
+    console.log("Submitted rating", response);
+    Alert.alert(
+      "Rating submitted",
+      "You will be redirected",
+      [
+        { text: "OK", onPress: () => this.props.navigation.navigate('Home', {screen: 'Home'}) }
+      ],
+      { cancelable: false }
+    );
   }
   render() {
     return (
       <ScrollView>
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <RatedVideo {...this.state.video1} />
-          <RatedVideo {...this.state.video2} />
+          {(this.state.video1 == null) ? <ActivityIndicator /> : <RatedVideo {...this.state.video1} />}
+          {(this.state.video2 == null) ? <ActivityIndicator /> : <RatedVideo {...this.state.video2} />}
         </View>
         <Divider style={{ backgroundColor: 'black', margin: 10 }} />
         <View>
           <Text h4>
             Compare those videos
             <Overlay isVisible={this.state.showHelp} onBackdropPress={() => this.setState({showHelp: false})}>
-              <Text>For each criteria, move the cursor on the left or the right side of the screen if you think that the corresponding video is doing better.</Text>
+              <Text>For each feature, move the cursor on the left or the right side of the screen if you think that the corresponding video is doing better.</Text>
             </Overlay>
             <Icon name='help-outline' onPress={() => this.setState({showHelp: !this.state.showHelp})} />
           </Text>
-          {this.criteria.map((c) => <CriteriaSlider key={c} criteria={c}/>)}
+          {this.state.video1 && this.state.video2 && this.state.constants && this.state.constants.features.map((f) =>
+            <FeatureSlider key={`${f.feature}_${this.state.video1.video_id}_${this.state.video2.video_id}`} description={f.description} onChange={this.updateRatings.bind(this, f.feature)}/>)}
           <View style={{ alignSelf: 'center', padding: 20 }}>
-            <Button title="Submit rating" />
+            <Button title="Submit rating" onPress={this.submitRatings.bind(this)} />
           </View>
         </View>
       </ScrollView>

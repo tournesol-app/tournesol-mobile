@@ -30,7 +30,7 @@ export class APIClient {
         console.log(payload, json);
         return json;
       } else {
-        throw new Error(json.toString());
+        throw new Error(JSON.stringify(json));
       }
     } catch (error) {
       // FIXME

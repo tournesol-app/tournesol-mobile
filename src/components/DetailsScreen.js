@@ -10,8 +10,7 @@ export default class DetailsScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      video: null,
-      stats: null,
+      loading: true
     };
   }
   async componentDidMount() {
@@ -28,9 +27,10 @@ export default class DetailsScreen extends React.Component {
     }
   }
   async fetchVideo() {
+    this.setState({loading: true});
     let response = await this.context.getClient().fetchVideo(this.props.route.params.video_id);
     if (response == null) response = await this.context.getClient().createVideo(this.props.route.params.video_id);
-    this.setState({video: response});
+    this.setState({video: response, loading: false});
   }
   async fetchStatistics() {
     const response = await this.context.getClient().fetchStatistics();
@@ -74,17 +74,18 @@ export default class DetailsScreen extends React.Component {
                     <Text>{f.description}</Text>
                     <Progress.Bar progress={this.percentScore(f.feature)} width={250} color={theme.colors.primary} borderColor={theme.colors.grey0} />
                   </View>
-                ) : <ActivityIndicator/>}
+                ) : <ActivityIndicator color={theme.colors.primary}/>}
               </View>
             </View>
-          : <View>
+          : (this.state.loading && <View><ActivityIndicator color={theme.colors.primary} size='large'/></View> ||
+            <View>
               <Text>No video found (id: {this.props.route.params.video_id}).</Text>
               <Button title="Home"
                 onPress={() => {
                   this.props.navigation.navigate('Home');
                 }}
               />
-            </View>
+            </View>)
         }
       </ScrollView>
     )

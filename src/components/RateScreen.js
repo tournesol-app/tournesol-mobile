@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ActivityIndicator, Alert, ImageBackground, Linking, ScrollView, View } from 'react-native';
 import { Button, Divider, Icon, Overlay, Slider, Text } from 'react-native-elements';
-
 import { AuthContext } from '../AuthContext';
+import theme from '../theme';
 
 function RatedVideo({video_id, name}) {
   return (
@@ -119,8 +119,8 @@ export default class RateScreen extends React.Component {
     return (
       <ScrollView>
         <View style={{flex: 1, flexDirection: 'row'}}>
-          {(this.state.video1 == null) ? <ActivityIndicator /> : <RatedVideo {...this.state.video1} />}
-          {(this.state.video2 == null) ? <ActivityIndicator /> : <RatedVideo {...this.state.video2} />}
+          {(this.state.video1 == null) ? <ActivityIndicator color={theme.colors.primary} /> : <RatedVideo {...this.state.video1} />}
+          {(this.state.video2 == null) ? <ActivityIndicator color={theme.colors.primary} /> : <RatedVideo {...this.state.video2} />}
         </View>
         <Divider style={{ backgroundColor: 'black', margin: 10 }} />
         <View>

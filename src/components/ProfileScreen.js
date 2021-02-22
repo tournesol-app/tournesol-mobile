@@ -3,6 +3,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { Avatar, Badge, Button, Divider, Icon, Text } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
+import theme from '../theme';
 
 export default class ProfileScreen extends React.Component {
   static contextType = AuthContext;
@@ -39,7 +40,7 @@ export default class ProfileScreen extends React.Component {
     return (this.state.profile == null)
         ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text>Loading...</Text>
-            <ActivityIndicator size="large" color="#0000ff" />
+            <ActivityIndicator size="large" color={theme.colors.primary} />
           </View>
         : <View>
             <View>

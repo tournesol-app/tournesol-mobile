@@ -88,7 +88,6 @@ export default function App(props) {
   function extractVideoId(url) {
     const match = /https\:\/\/youtu\.be\/(.+)/g.exec(url);
     if (match) {
-      console.log("Extracted video id", match[1]);
       return match[1];
     }
   }
@@ -100,6 +99,7 @@ export default function App(props) {
       eventListener = eventEmitter.addListener('importUrl', (event) => {
         const videoId = extractVideoId(event);
         if (videoId) {
+          console.log(`Received event with video_id=${videoId}`);
           navigate('Details', {video_id: videoId});
         }
       });
@@ -126,8 +126,9 @@ export default function App(props) {
         },
         getInitialURL() {
           if (props.importUrl) {
-            const videoId = extractVideoId(props.importUrl)
+            const videoId = extractVideoId(props.importUrl);
             if (videoId) {
+              console.log(`Opening with video_id=${videoId}`);
               return `tournesol://video/${videoId}`;
             }
           }

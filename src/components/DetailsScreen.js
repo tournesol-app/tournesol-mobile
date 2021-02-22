@@ -19,8 +19,13 @@ export default class DetailsScreen extends React.Component {
     this.setState({
       constants: constants
     });
-    this.fetchVideo();
     this.fetchStatistics();
+    this.fetchVideo();
+  }
+  async componentDidUpdate(prevProps) {
+    if (this.props.route.params.video_id !== prevProps.route.params.video_id) {
+      this.fetchVideo();
+    }
   }
   async fetchVideo() {
     let response = await this.context.getClient().fetchVideo(this.props.route.params.video_id);

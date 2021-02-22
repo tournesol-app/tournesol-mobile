@@ -6,7 +6,6 @@ import { AuthContext } from '../AuthContext';
 import theme from '../theme';
 
 export default class DetailsScreen extends React.Component {
-  criteria = ['reliability', 'importance', 'engaging', 'pedagogy', 'layman_friendly', 'diversity_inclusion', 'backfire_risk'];
   static contextType = AuthContext;
   constructor(props) {
     super(props);
@@ -15,7 +14,11 @@ export default class DetailsScreen extends React.Component {
       stats: null,
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
+    const constants = await this.context.getClient().fetchConstants();
+    this.setState({
+      constants: constants
+    });
     this.fetchVideo();
     this.fetchStatistics();
   }
@@ -29,9 +32,9 @@ export default class DetailsScreen extends React.Component {
     if (response != null) this.setState({stats: response});
   }
 
-  percentScore(criteria) {
+  percentScore(feature) {
     const minScore = this.state.stats.min_score || 0;
-    return (this.state.video[criteria] - minScore) / (this.state.stats.max_score - minScore);
+    return (this.state.video[feature] - minScore) / (this.state.stats.max_score - minScore);
   }
 
   render() {
@@ -61,17 +64,13 @@ export default class DetailsScreen extends React.Component {
                     }}
                   />
                 </View>
-                {this.criteria.map((c) =>
-                  <View key={c} style={{padding: 10}}>
-                    <Text>{c}</Text>
-                    { (this.state.stats != null)
-                      ? <Progress.Bar progress={this.percentScore(c)} width={200} color={theme.colors.primary} borderColor={theme.colors.grey0} />
-                      : <Text>{this.state.video[c]}</Text>
-                    }
+                {this.state.constants && this.state.video && this.state.stats && this.state.constants.features.map((f) =>
+                  <View key={`${f.feature}_${this.state.video.video_id}`} style={{padding: 10}}>
+                    <Text>{f.description}</Text>
+                    <Progress.Bar progress={this.percentScore(f.feature)} width={250} color={theme.colors.primary} borderColor={theme.colors.grey0} />
                   </View>
                 )}
               </View>
-              <Text h4>Comments</Text>
             </View>
           : <View>
               <Text>No video found (id: {this.props.route.params.video_id}).</Text>

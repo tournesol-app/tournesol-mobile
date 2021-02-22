@@ -74,7 +74,7 @@ export class APIClient {
     if (response.count == 1) {
       return response.results[0];
     } else {
-      console.log(`${response.count} results for video_id=${video_id}`);
+      console.error(`${response.count} results for video_id=${video_id}`);
     }
   }
 

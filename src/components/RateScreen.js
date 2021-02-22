@@ -95,7 +95,7 @@ export default class RateScreen extends React.Component {
       ratings: {},
       showHelp: false
     });
-    console.log("Rated videos", video1.video_id, video2.video_id);
+    console.log(`Comparing videos ${video1.video_id} and ${video2.video_id}`);
   }
   updateRatings(feature, score) {
     this.setState(prevState => {

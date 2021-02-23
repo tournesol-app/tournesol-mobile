@@ -134,7 +134,11 @@ export default class RateScreen extends React.Component {
           <Text h4>
             Compare those videos
             <Overlay isVisible={this.state.showHelp} onBackdropPress={() => this.setState({showHelp: false})}>
-              <Text>For each feature, move the cursor on the left or the right side of the screen if you think that the corresponding video is doing better.</Text>
+              <Text>
+                For each feature, move the cursor on the left or the right side of the screen if you think that the corresponding video is doing better.
+                See <Text style={{color: 'red'}} onPress={() => {Linking.openURL('https://wiki.tournesol.app/index.php/Quality_criteria')}}>our Wiki entry</Text>
+                &nbsp;for information regarding the criteria.
+              </Text>
             </Overlay>
             <Icon name='help-outline' onPress={() => this.setState({showHelp: !this.state.showHelp})} />
           </Text>

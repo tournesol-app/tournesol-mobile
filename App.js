@@ -145,7 +145,6 @@ export default function App(props) {
         <ThemeProvider theme={theme}>
           <Header
             centerComponent={<Text h4>🌻 Tournesol</Text>}
-            rightComponent={<Icon name='menu' onPress={() => authContext.signOut()} />}
             backgroundColor={theme.colors.primary}
             statusBarProps={{hidden: true}}
           />

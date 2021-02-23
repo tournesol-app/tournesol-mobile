@@ -5,7 +5,7 @@ export class APIClient {
     this.authToken = authToken;
     this.username = username;
   }
-  async request(endpoint, method = "GET", params = null, payload = null) {
+  request(endpoint, method = "GET", params = null, payload = null) {
     try {
       const data = {
         method: method,
@@ -24,14 +24,7 @@ export class APIClient {
       if (params != null) {
         url += `?${new URLSearchParams(params)}`
       }
-      const response = await fetch(url, data);
-      const json = await response.json();
-      if (response.ok) {
-        console.log(payload, json);
-        return json;
-      } else {
-        throw new Error(JSON.stringify(json));
-      }
+      return fetch(url, data);
     } catch (error) {
       // FIXME
       console.error(error);
@@ -39,51 +32,31 @@ export class APIClient {
     }
   };
 
-  async authenticate(username, password) {
-    const response = await this.request('/api-token-auth/', 'POST', null, {username, password});
-    return response.token;
+  authenticate(username, password) {
+    return this.request('/api-token-auth/', 'POST', null, {username, password});
   }
 
-  // https://tournesol.app/api/v2/videos/search_tournesol/?backfire_risk=62.5&diversity_inclusion=62.5&duration_gte=0&engaging=62.5&importance=62.5&layman_friendly=62.5&pedagogy=62.5&reliability=62.5&search=test&views_gte=0
-  async search(q) {
-    const response = await this.request(
-      '/api/v2/videos/search_tournesol/',
-      'GET',
-      {
-        search: q
-      }
-    );
-    return response;
-  }
-
-  async myProfile() {
-    const response = await this.request(
+  myProfile() {
+    return this.request(
       '/api/v2/user_information/',
       'GET',
       {
         user__username: this.username
       }
     );
-    return response;
   }
 
-  async fetchVideo(video_id) {
-    const response = await this.request(
+  // https://tournesol.app/api/v2/videos/search_tournesol/?backfire_risk=62.5&diversity_inclusion=62.5&duration_gte=0&engaging=62.5&importance=62.5&layman_friendly=62.5&pedagogy=62.5&reliability=62.5&search=test&views_gte=0
+  searchVideos(filters) {
+    return this.request(
       '/api/v2/videos/search_tournesol/',
       'GET',
-      {
-        video_id: video_id
-      }
+      filters
     );
-    if (response.count == 1) {
-      return response.results[0];
-    } else {
-      console.error(`${response.count} results for video_id=${video_id}`);
-    }
   }
 
-  async createVideo(video_id) {
-    const response = await this.request(
+  createVideo(video_id) {
+    return this.request(
       '/api/v2/videos/',
       'POST',
       null,
@@ -91,46 +64,41 @@ export class APIClient {
         video_id: video_id
       }
     );
-    return response;
   }
 
-  async fetchStatistics() {
-    const response = await this.request(
+  fetchStatistics() {
+    return this.request(
       '/api/v2/statistics/view/',
       'GET',
     );
-    return response;
   }
 
-  async sampleVideo() {
-    const response = await this.request(
+  sampleVideo() {
+    return this.request(
       '/api/v2/expert_ratings/sample_video/',
       'GET'
     );
-    return response;
   }
 
-  async sampleVideoWithOther(other_id) {
-    const response = await this.request(
+  sampleVideoWithOther(other_id) {
+    return this.request(
       '/api/v2/expert_ratings/sample_video_with_other/',
       'GET',
       {
         video_other: other_id
       }
     );
-    return response;
   }
 
-  async fetchConstants() {
-    const response = await this.request(
+  fetchConstants() {
+    return this.request(
       '/api/v2/constants/view_constants/',
       'GET'
     );
-    return response;
   }
 
-  async rateVideos(video1, video2, ratings) {
-    const response = await this.request(
+  rateVideos(video1, video2, ratings) {
+    return this.request(
       '/api/v2/expert_ratings/',
       'POST',
       null,
@@ -140,6 +108,5 @@ export class APIClient {
         ...ratings
       }
     );
-    return response;
   }
 }

@@ -22,9 +22,9 @@ export default class ProfileScreen extends React.Component {
 
   async loadProfile() {
     const response = await this.context.getClient().myProfile();
-    if (response.count == 1) {
-      this.setState({profile: response.results[0]});
-    }
+    response.json().then(data => {
+      if (data.count == 1) this.setState({profile: data.results[0]});
+    });
   }
 
   componentDidMount() {

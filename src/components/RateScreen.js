@@ -75,10 +75,8 @@ export default class RateScreen extends React.Component {
   }
 
   async componentDidMount() {
-    const constants = await this.context.getClient().fetchConstants();
-    this.setState({
-      constants: constants
-    });
+    const response = await this.context.getClient().fetchConstants();
+    response.json().then(constants => this.setState({ constants }));
     this.reload();
     this.unsubscribe = this.props.navigation.addListener("focus", this.reload.bind(this));
   }
@@ -87,8 +85,17 @@ export default class RateScreen extends React.Component {
   }
   async reload() {
     const video_id = this.props.route.params ? this.props.route.params.video_id : null;
-    const video1 = await (video_id ? this.context.getClient().fetchVideo(video_id) : this.context.getClient().sampleVideo());
-    const video2 = await this.context.getClient().sampleVideoWithOther(video1.video_id);
+    // Fetch left video
+    let video1;
+    if (video_id) {
+      const data = await this.context.getClient().searchVideos({video_id}).then(res => res.json());
+      video1 = data.results[0];
+    } else {
+      video1 = await this.context.getClient().sampleVideo().then(res => res.json());
+    }
+    // Video to be rated against
+    const response2 = await this.context.getClient().sampleVideoWithOther(video1.video_id);
+    const video2 = await response2.json();
     this.setState({
       video1: video1,
       video2: video2,
@@ -105,7 +112,7 @@ export default class RateScreen extends React.Component {
   }
   async submitRatings() {
     const response = await this.context.getClient().rateVideos(this.state.video1, this.state.video2, this.state.ratings);
-    console.log("Submitted rating", response);
+    console.log("Submitted rating");
     Alert.alert(
       "Rating submitted",
       "You will be redirected",

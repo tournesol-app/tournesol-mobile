@@ -13,8 +13,12 @@ export default class SearchScreen extends React.Component {
   }
 
   async search(q) {
-    const response = await this.context.getClient().search(q);
-    this.setState({result: response});
+    const response = await this.context.getClient().searchVideos({search: q});
+    if (!response.ok) {
+      console.error("Error while searching, please try again!");
+      return;
+    }
+    response.json().then(data => this.setState({result: data}));
   }
 
   render() {

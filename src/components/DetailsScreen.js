@@ -14,10 +14,7 @@ export default class DetailsScreen extends React.Component {
     };
   }
   async componentDidMount() {
-    const constants = await this.context.getClient().fetchConstants();
-    this.setState({
-      constants: constants
-    });
+    this.fetchConstants();
     this.fetchStatistics();
     this.fetchVideo();
   }
@@ -26,15 +23,30 @@ export default class DetailsScreen extends React.Component {
       this.fetchVideo();
     }
   }
+  async fetchConstants() {
+    const response = await this.context.getClient().fetchConstants();
+    response.json().then(constants => this.setState({constants}))
+  }
   async fetchVideo() {
     this.setState({loading: true});
-    let response = await this.context.getClient().fetchVideo(this.props.route.params.video_id);
-    if (response == null) response = await this.context.getClient().createVideo(this.props.route.params.video_id);
-    this.setState({video: response, loading: false});
+    let response = await this.context.getClient().searchVideos({video_id: this.props.route.params.video_id});
+    const data = await response.json();
+    let video;
+    if (data.count == 1) video = data.results[0];
+    else if (data.count == 0) {
+      const response2 = await this.context.getClient().createVideo(this.props.route.params.video_id);
+      if (response2.ok) video = await response2.json();
+    }
+    if (!video) {
+      console.error("Could not retrieve video!");
+      this.props.navigation.navigate('Home');
+      return;
+    }
+    this.setState({video: video, loading: false});
   }
   async fetchStatistics() {
     const response = await this.context.getClient().fetchStatistics();
-    if (response != null) this.setState({stats: response});
+    response.json().then(data => this.setState({stats: data}));
   }
 
   percentScore(feature) {

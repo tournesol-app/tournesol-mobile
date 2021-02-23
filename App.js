@@ -75,9 +75,15 @@ export default function App(props) {
       return new APIClient(this.state.token, this.state.username);
     },
     signIn: async function (username, password) {
-      const token = await this.getClient().authenticate(username, password);
+      const response = await this.getClient().authenticate(username, password);
+      if (!response.ok) {
+        console.error("Error while authenticating!");
+        return;
+      }
+      const data = await response.json();
+      const token = data.token;
       await EncryptedStorage.setItem('userData', JSON.stringify({token, username}));
-      authDispatch({ type: 'SIGN_IN', token: token, username: username, });
+      authDispatch({ type: 'SIGN_IN', token, username });
     },
     signOut: async () => {
       await EncryptedStorage.removeItem('userData');

@@ -20,7 +20,8 @@ export default function IntroScreen({ navigation }) {
         </View>
         <Text>
           Tournesol elicits and exploits contributors' inputs to identify top quality contents.
-          Learn more with our <Text style={{color: 'red'}} onPress={() => {Linking.openURL('https://bit.ly/tournesol-app')}}>White Paper</Text> or
+          Learn more with our <Text style={{color: 'red'}} onPress={() => {Linking.openURL('https://bit.ly/tournesol-app')}}>White Paper</Text>,
+          our <Text style={{color: 'red'}} onPress={() => {Linking.openURL('https://wiki.tournesol.app/')}}>Tournesol Wiki</Text> or
           &nbsp;<Text style={{color: 'red'}} onPress={() => {Linking.openURL('mailto:le-nguyen.hoang@science4all.org')}}>contact us</Text>.
         </Text>
         <View style={{ alignSelf: 'center', padding: 12 }}>
@@ -30,7 +31,6 @@ export default function IntroScreen({ navigation }) {
             : <Button title="Log In" onPress={() => navigation.navigate('Login')} />
         }
         </View>
-        <Text>Bla...</Text>
       </View>
       }
     </AuthContext.Consumer>

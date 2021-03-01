@@ -29,7 +29,7 @@ export default class DetailsScreen extends React.Component {
   }
   async fetchVideo() {
     this.setState({loading: true});
-    let response = await this.context.getClient().searchVideos({video_id: this.props.route.params.video_id});
+    let response = await this.context.getClient().fetchVideo(this.props.route.params.video_id);
     const data = await response.json();
     let video;
     if (data.count == 1) video = data.results[0];

@@ -88,7 +88,7 @@ export default class RateScreen extends React.Component {
     // Fetch left video
     let video1;
     if (video_id) {
-      const data = await this.context.getClient().searchVideos({video_id}).then(res => res.json());
+      const data = await this.context.getClient().fetchVideo(video_id).then(res => res.json());
       video1 = data.results[0];
     } else {
       video1 = await this.context.getClient().sampleVideo().then(res => res.json());

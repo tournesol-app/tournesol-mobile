@@ -55,6 +55,14 @@ export class APIClient {
     );
   }
 
+  fetchVideo(video_id) {
+    return this.request(
+      '/api/v2/videos/',
+      'GET',
+      { video_id }
+    );
+  }
+
   createVideo(video_id) {
     return this.request(
       '/api/v2/videos/',

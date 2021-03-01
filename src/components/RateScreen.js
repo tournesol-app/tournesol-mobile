@@ -75,15 +75,23 @@ export default class RateScreen extends React.Component {
   }
 
   async componentDidMount() {
-    const response = await this.context.getClient().fetchConstants();
-    response.json().then(constants => this.setState({ constants }));
-    this.reload();
-    this.unsubscribe = this.props.navigation.addListener("focus", this.reload.bind(this));
+    this.loadConstants();
+    this.loadPreferences();
+    this.loadVideos();
+    this.unsubscribe = this.props.navigation.addListener("focus", this.loadVideos.bind(this));
   }
   componentWillUnmount() {
     this.unsubscribe();
   }
-  async reload() {
+  async loadConstants() {
+    const response = await this.context.getClient().fetchConstants();
+    response.json().then(constants => this.setState({ constants }));
+  }
+  async loadPreferences() {
+    const response = await this.context.getClient().userPreferences();
+    response.json().then(preferences => this.setState({ preferences }));
+  }
+  async loadVideos() {
     const video_id = this.props.route.params ? this.props.route.params.video_id : null;
     // Fetch left video
     let video1;
@@ -142,7 +150,7 @@ export default class RateScreen extends React.Component {
             </Overlay>
             <Icon name='help-outline' onPress={() => this.setState({showHelp: !this.state.showHelp})} />
           </Text>
-          {this.state.video1 && this.state.video2 && this.state.constants && this.state.constants.features.map((f) =>
+          {this.state.video1 && this.state.video2 && this.state.constants && this.state.preferences && this.state.constants.features.filter((f) => this.state.preferences[`${f.feature}_enabled`]).map((f) =>
             <FeatureSlider key={`${f.feature}_${this.state.video1.video_id}_${this.state.video2.video_id}`} description={f.description} onChange={this.updateRatings.bind(this, f.feature)}/>)}
           <View style={{ alignSelf: 'center', padding: 20 }}>
             <Button title="Submit rating" onPress={this.submitRatings.bind(this)} />

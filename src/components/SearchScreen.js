@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Linking, View } from 'react-native';
+import { FlatList, Linking, Pressable, View } from 'react-native';
 import { AuthContext } from '../AuthContext';
 import { Avatar, ListItem, Input, Text } from 'react-native-elements';
 
@@ -41,8 +41,10 @@ export default class SearchScreen extends React.Component {
                 onPress={() => {Linking.openURL(`https://www.youtube.com/watch?v=${item.video_id}`)}}
               />
               <ListItem.Content>
-                <ListItem.Title onPress={() => this.props.navigation.navigate('Details', {video_id: item.video_id})}>{item.name}</ListItem.Title>
-                <ListItem.Subtitle>Score : {item.score.toFixed(0)}</ListItem.Subtitle>
+                <Pressable onPress={() => this.props.navigation.navigate('Details', {video_id: item.video_id})}>
+                  <ListItem.Title>{item.name}</ListItem.Title>
+                  <ListItem.Subtitle>Score : {item.score.toFixed(0)}</ListItem.Subtitle>
+                </Pressable>
               </ListItem.Content>
             </ListItem>
           }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { Avatar, Badge, Button, Divider, Icon, Text } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
@@ -22,9 +22,15 @@ export default class ProfileScreen extends React.Component {
 
   async loadProfile() {
     const response = await this.context.getClient().myProfile();
-    response.json().then(data => {
-      if (data.count == 1) this.setState({profile: data.results[0]});
-    });
+    if (response.ok) {
+      response.json().then(data => {
+        if (data.count == 1) this.setState({profile: data.results[0]});
+      });
+    } else if (response.status === 403) {
+      this.signOut();
+    } else {
+      console.error("An error occurred!")
+    }
   }
 
   componentDidMount() {
@@ -43,26 +49,20 @@ export default class ProfileScreen extends React.Component {
             <ActivityIndicator size="large" color={theme.colors.primary} />
           </View>
         : <View>
-            <View>
-              {
-                (this.state.profile == null)
-                  ? <Text>Loading...</Text>
-                  : <Text h4><Icon name="person" /> {this.state.profile.username}</Text>
-              }
-            </View>
+            <Text h4><Icon name="person" /> {this.state.profile.username}</Text>
             <Divider style={{ backgroundColor: 'black', marginBottom: 10 }} />
             <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-              <Avatar
+              {this.state.profile.avatar && <Avatar
                 rounded
                 size="medium"
                 source={this.state.profile.avatar && { uri: this.state.profile.avatar }}
                 icon={{name: 'person'}}
-              />
+              />}
               <Text h4 style={{marginLeft: 25}}>{this.state.profile.first_name} {this.state.profile.last_name}</Text>
             </View>
             <View>
-              <Text style={{fontWeight: 'bold'}}>{this.state.profile.title}</Text>
-              <Text style={{marginLeft: 25, fontStyle: 'italic'}}>{this.state.profile.bio}</Text>
+              {this.state.profile.title && <Text style={{fontWeight: 'bold'}}>{this.state.profile.title}</Text>}
+              {this.state.profile.bio && <Text style={{marginLeft: 25, fontStyle: 'italic'}}>{this.state.profile.bio}</Text>}
               <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                 {[
                   {label: "Ratings", count: this.state.profile.n_ratings},
@@ -72,6 +72,10 @@ export default class ProfileScreen extends React.Component {
                 ].map(({label, count}) => <Text key={label} style={{padding: 3}}>{label} <Badge value={count} /></Text>)}
               </View>
             </View>
+            <Pressable style={{flexDirection: "row", marginTop: 20}} onPress={() => this.props.navigation.navigate('RateLater')}>
+              <Icon name="watch-later" color={theme.colors.primary} />
+              <Text>My rate later list</Text>
+            </Pressable>
             <View style={{ alignSelf: 'center', padding: 20 }}>
               <Button title="Log Out" onPress={() => this.signOut()} />
             </View>

@@ -4,6 +4,7 @@ import * as Progress from 'react-native-progress';
 import { Button, Divider, Icon, Text } from 'react-native-elements';
 import { AuthContext } from '../AuthContext';
 import theme from '../theme';
+import { Pressable } from 'react-native';
 
 export default class DetailsScreen extends React.Component {
   static contextType = AuthContext;
@@ -42,11 +43,18 @@ export default class DetailsScreen extends React.Component {
       this.props.navigation.navigate('Home');
       return;
     }
-    this.setState({video: video, loading: false});
+    this.setState({video: video, loading: false, rateLater: false});
   }
   async fetchStatistics() {
     const response = await this.context.getClient().fetchStatistics();
     response.json().then(data => this.setState({stats: data}));
+  }
+  async addToRateLater() {
+    const response = await this.context.getClient().addToRateLater(this.state.video.video_id);
+    response.json().then(() => {
+      this.setState({rateLater: true})
+      console.log("Video added to rate-later list!")
+    });
   }
 
   percentScore(feature) {
@@ -73,13 +81,23 @@ export default class DetailsScreen extends React.Component {
               </View>
               <Text h4>Ratings</Text>
               <View>
-                <View style={{ alignSelf: 'center', padding: 20 }}>
+                <View style={{flex: 1, flexDirection: 'row', alignSelf: 'center', padding: 20}}>
                   <Button title="Rate"
                     icon={<Icon name="functions" color={theme.colors.secondary} />}
                     onPress={() => {
                       this.props.navigation.navigate('RateVideo', {video_id: this.state.video.video_id});
                     }}
                   />
+                  { this.state.rateLater ?
+                  <View style={{marginLeft: 15}}>
+                    <Icon name="watch-later" color="green" />
+                    <Text>Added!</Text>
+                  </View> :
+                  <Pressable style={{marginLeft: 15}} onPress={() => this.addToRateLater()}>
+                    <Icon name="watch-later" color={theme.colors.primary} />
+                    <Text>Rate later</Text>
+                  </Pressable>
+                  }
                 </View>
                 {(this.state.constants && this.state.video && this.state.stats) ? this.state.constants.features.map((f) =>
                   <View key={`${f.feature}_${this.state.video.video_id}`} style={{padding: 10}}>

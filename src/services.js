@@ -124,4 +124,22 @@ export class APIClient {
       }
     );
   }
+
+  fetchRateLater() {
+    return this.request(
+      '/api/v2/rate_later/',
+      'GET'
+    );
+  }
+
+  addToRateLater(video_id) {
+    return this.request(
+      '/api/v2/rate_later/',
+      'POST',
+      null,
+      {
+        video: video_id
+      }
+    );
+  }
 }

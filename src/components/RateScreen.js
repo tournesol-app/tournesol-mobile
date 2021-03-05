@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ActivityIndicator, Alert, ImageBackground, Linking, ScrollView, View } from 'react-native';
-import { Button, Divider, Icon, Overlay, Slider, Text } from 'react-native-elements';
+import { Button, Divider, Icon, Slider, Text } from 'react-native-elements';
 import { AuthContext } from '../AuthContext';
 import theme from '../theme';
 
@@ -69,9 +69,7 @@ export default class RateScreen extends React.Component {
   static contextType = AuthContext;
   constructor(props) {
     super(props);
-    this.state = {
-      showHelp: false
-    }
+    this.state = {}
   }
 
   async componentDidMount() {
@@ -107,8 +105,7 @@ export default class RateScreen extends React.Component {
     this.setState({
       video1: video1,
       video2: video2,
-      ratings: {},
-      showHelp: false
+      ratings: {}
     });
     console.log(`Comparing videos ${video1.video_id} and ${video2.video_id}`);
   }
@@ -141,16 +138,9 @@ export default class RateScreen extends React.Component {
         <View>
           <Text h4>
             Compare those videos
-            <Overlay isVisible={this.state.showHelp} onBackdropPress={() => this.setState({showHelp: false})}>
-              <Text>
-                For each feature, move the cursor on the left or the right side of the screen if you think that the corresponding video is doing better.
-                See <Text style={{color: 'red'}} onPress={() => {Linking.openURL('https://wiki.tournesol.app/index.php/Quality_criteria')}}>our Wiki entry</Text>
-                &nbsp;for information regarding the criteria.
-              </Text>
-            </Overlay>
-            <Icon name='help-outline' onPress={() => this.setState({showHelp: !this.state.showHelp})} />
+            <Icon name='help-outline' onPress={() => Linking.openURL('https://wiki.tournesol.app/index.php/Quality_criteria')} />
           </Text>
-          {this.state.video1 && this.state.video2 && this.state.constants && this.state.preferences && this.state.constants.features.filter((f) => this.state.preferences[`${f.feature}_enabled`]).map((f) =>
+          {this.state.video1 && this.state.video2 && this.state.constants && this.state.preferences && this.state.constants.features && this.state.constants.features.filter((f) => this.state.preferences[`${f.feature}_enabled`]).map((f) =>
             <FeatureSlider key={`${f.feature}_${this.state.video1.video_id}_${this.state.video2.video_id}`} description={f.description} onChange={this.updateRatings.bind(this, f.feature)}/>)}
           <View style={{ alignSelf: 'center', padding: 20 }}>
             <Button title="Submit rating" onPress={this.submitRatings.bind(this)} />

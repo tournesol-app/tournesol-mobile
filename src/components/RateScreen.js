@@ -3,8 +3,9 @@ import { ActivityIndicator, ImageBackground, Linking, ScrollView, View } from 'r
 import { Button, Divider, Icon, Slider, Text } from 'react-native-elements';
 import { AuthContext } from '../AuthContext';
 import theme from '../theme';
+import { navigate } from '../RootNavigation';
 
-function RatedVideo({video_id, name}) {
+function RatedVideo({video_id, name, reload}) {
   return (
   <View style={{flex: 0.5, paddingHorizontal: 10}}>
     <ImageBackground
@@ -16,6 +17,10 @@ function RatedVideo({video_id, name}) {
             onPress={() => {Linking.openURL(`https://www.youtube.com/watch?v=${video_id}`)}} />
     </ImageBackground>
     <Text>{name}</Text>
+    <View style={{flexDirection: 'row'}}>
+      <Icon name='refresh' size={30} onPress={() => reload()} />
+      <Icon name='info' size={30} onPress={() => navigate('Details', { video_id })} />
+    </View>
   </View>)
 }
 
@@ -115,13 +120,13 @@ export default class RateScreen extends React.Component {
   }
   async reloadLeft() {
     await this.context.getClient()
-            .sampleVideoWithOther(video2.video_id)
+            .sampleVideoWithOther(this.state.video2.video_id)
             .then(res => res.json())
             .then(video1 => this.setState({video1, submitted: false}));
   }
   async reloadRight() {
     await this.context.getClient()
-            .sampleVideoWithOther(video1.video_id)
+            .sampleVideoWithOther(this.state.video1.video_id)
             .then(res => res.json())
             .then(video2 => this.setState({video2, submitted: false}));
   }
@@ -141,15 +146,15 @@ export default class RateScreen extends React.Component {
     return (
       <ScrollView>
         <View style={{flex: 1, flexDirection: 'row'}}>
-          {(this.state.video1 == null) ? <ActivityIndicator color={theme.colors.primary} /> : <RatedVideo {...this.state.video1} />}
-          {(this.state.video2 == null) ? <ActivityIndicator color={theme.colors.primary} /> : <RatedVideo {...this.state.video2} />}
+          {(this.state.video1 == null) ? <ActivityIndicator color={theme.colors.primary} /> : <RatedVideo {...this.state.video1} reload={() => this.reloadLeft()} />}
+          {(this.state.video2 == null) ? <ActivityIndicator color={theme.colors.primary} /> : <RatedVideo {...this.state.video2} reload={() => this.reloadRight()} />}
         </View>
         <Divider style={{ backgroundColor: 'black', margin: 10 }} />
         <View>
           {this.state.submitted ?
-            <Text h4 style={{color: 'green'}}>Rating submitted!</Text>
+            <Text h4 style={{color: "green", alignSelf: "center"}}>Rating submitted!</Text>
               :
-            <Text h4>
+            <Text h4 style={{alignSelf: "center"}}>
               Compare those videos
               <Icon name='help-outline' onPress={() => Linking.openURL('https://wiki.tournesol.app/index.php/Quality_criteria')} />
             </Text>

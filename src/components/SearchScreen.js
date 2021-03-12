@@ -1,24 +1,26 @@
 import React from 'react';
-import { FlatList, Linking, Pressable, View } from 'react-native';
+import { ActivityIndicator, FlatList, Linking, Pressable, View } from 'react-native';
 import { AuthContext } from '../AuthContext';
 import { Avatar, ListItem, Input, Text } from 'react-native-elements';
+import theme from '../theme';
 
 export default class SearchScreen extends React.Component {
   static contextType = AuthContext;
   constructor(props) {
     super(props);
     this.state = {
-      result: null
+      loading: false
     };
   }
 
   async search(q) {
+    this.setState({loading: true});
     const response = await this.context.getClient().searchVideos({search: q});
     if (!response.ok) {
       console.error("Error while searching, please try again!");
       return;
     }
-    response.json().then(data => this.setState({result: data}));
+    response.json().then(data => this.setState({result: data, loading: false}));
   }
 
   render() {
@@ -29,7 +31,8 @@ export default class SearchScreen extends React.Component {
           onSubmitEditing={(e) => this.search(e.nativeEvent.text)}
           leftIcon={{ name: 'search', type: 'material' }}
         />
-        { (this.state.result != null) ?
+        { this.state.loading ? <ActivityIndicator color={theme.colors.primary} size='large'/>
+        : this.state.result ?
         <FlatList
           data={this.state.result.results}
           renderItem={
@@ -50,8 +53,7 @@ export default class SearchScreen extends React.Component {
           }
           keyExtractor={item => item.id.toString()}
         />
-        :
-          <Text>Veuillez saisir votre recherche.</Text>
+        : <Text>Veuillez saisir votre recherche.</Text>
         }
       </View>
     )

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivityIndicator, Alert, ImageBackground, Linking, ScrollView, View } from 'react-native';
+import { ActivityIndicator, ImageBackground, Linking, ScrollView, View } from 'react-native';
 import { Button, Divider, Icon, Slider, Text } from 'react-native-elements';
 import { AuthContext } from '../AuthContext';
 import theme from '../theme';
@@ -59,7 +59,7 @@ class FeatureSlider extends React.Component {
         <Slider value={this.state.score} onValueChange={(v) => {
           this.props.onChange(v);
           this.setState({score: v});
-        }} />
+        }} {...this.props} />
       </View>
     )
   }
@@ -76,10 +76,13 @@ export default class RateScreen extends React.Component {
     this.loadConstants();
     this.loadPreferences();
     this.loadVideos();
-    this.unsubscribe = this.props.navigation.addListener("focus", this.loadVideos.bind(this));
   }
-  componentWillUnmount() {
-    this.unsubscribe();
+  async componentDidUpdate(prevProps) {
+    const videoId = this.props.route.params ? this.props.route.params.video_id : null;
+    const prevVideoId = prevProps.route.params ? prevProps.route.params.video_id : null;
+    if (videoId !== prevVideoId) {
+      this.loadVideos();
+    }
   }
   async loadConstants() {
     const response = await this.context.getClient().fetchConstants();
@@ -105,10 +108,24 @@ export default class RateScreen extends React.Component {
     this.setState({
       video1: video1,
       video2: video2,
-      ratings: {}
+      ratings: {},
+      submitted: false
     });
     console.log(`Comparing videos ${video1.video_id} and ${video2.video_id}`);
   }
+  async reloadLeft() {
+    await this.context.getClient()
+            .sampleVideoWithOther(video2.video_id)
+            .then(res => res.json())
+            .then(video1 => this.setState({video1, submitted: false}));
+  }
+  async reloadRight() {
+    await this.context.getClient()
+            .sampleVideoWithOther(video1.video_id)
+            .then(res => res.json())
+            .then(video2 => this.setState({video2, submitted: false}));
+  }
+
   updateRatings(feature, score) {
     this.setState(prevState => {
       prevState.ratings[feature] = 100 * score;
@@ -118,14 +135,7 @@ export default class RateScreen extends React.Component {
   async submitRatings() {
     const response = await this.context.getClient().rateVideos(this.state.video1, this.state.video2, this.state.ratings);
     console.log("Submitted rating");
-    Alert.alert(
-      "Rating submitted",
-      "You will be redirected",
-      [
-        { text: "OK", onPress: () => this.props.navigation.navigate('Home', {screen: 'Home'}) }
-      ],
-      { cancelable: false }
-    );
+    this.setState({submitted: true});
   }
   render() {
     return (
@@ -136,14 +146,18 @@ export default class RateScreen extends React.Component {
         </View>
         <Divider style={{ backgroundColor: 'black', margin: 10 }} />
         <View>
-          <Text h4>
-            Compare those videos
-            <Icon name='help-outline' onPress={() => Linking.openURL('https://wiki.tournesol.app/index.php/Quality_criteria')} />
-          </Text>
+          {this.state.submitted ?
+            <Text h4 style={{color: 'green'}}>Rating submitted!</Text>
+              :
+            <Text h4>
+              Compare those videos
+              <Icon name='help-outline' onPress={() => Linking.openURL('https://wiki.tournesol.app/index.php/Quality_criteria')} />
+            </Text>
+          }
           {this.state.video1 && this.state.video2 && this.state.constants && this.state.preferences && this.state.constants.features && this.state.constants.features.filter((f) => this.state.preferences[`${f.feature}_enabled`]).map((f) =>
-            <FeatureSlider key={`${f.feature}_${this.state.video1.video_id}_${this.state.video2.video_id}`} description={f.description} onChange={this.updateRatings.bind(this, f.feature)}/>)}
+            <FeatureSlider key={`${f.feature}_${this.state.video1.video_id}_${this.state.video2.video_id}`} description={f.description} onChange={this.updateRatings.bind(this, f.feature)} disabled={this.state.submitted} />)}
           <View style={{ alignSelf: 'center', padding: 20 }}>
-            <Button title="Submit rating" onPress={this.submitRatings.bind(this)} />
+            <Button title="Submit rating" onPress={this.submitRatings.bind(this)} disabled={this.state.submitted} />
           </View>
         </View>
       </ScrollView>

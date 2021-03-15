@@ -105,7 +105,7 @@ export default class RateScreen extends React.Component {
       const data = await this.context.getClient().fetchVideo(video_id).then(res => res.json());
       video1 = data.results[0];
     } else {
-      video1 = await this.context.getClient().sampleVideo().then(res => res.json());
+      video1 = await this.context.getClient().sampleFirstVideo().then(res => res.json());
     }
     // Video to be rated against
     const response2 = await this.context.getClient().sampleVideoWithOther(video1.video_id);

@@ -88,6 +88,13 @@ export class APIClient {
     );
   }
 
+  sampleFirstVideo() {
+    return this.request(
+      '/api/v2/expert_ratings/sample_first_video/',
+      'GET'
+    );
+  }
+
   sampleVideo() {
     return this.request(
       '/api/v2/expert_ratings/sample_video/',

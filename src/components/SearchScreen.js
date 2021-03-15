@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, FlatList, Linking, Pressable, View } from 'react-native';
 import { AuthContext } from '../AuthContext';
-import { Avatar, ListItem, Input, Text } from 'react-native-elements';
+import { Avatar, ListItem, SearchBar, Text } from 'react-native-elements';
 import theme from '../theme';
 
 export default class SearchScreen extends React.Component {
@@ -9,27 +9,37 @@ export default class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
+      q: "",
     };
   }
 
-  async search(q) {
+  async componentDidMount() {
+    this.search();
+  }
+
+  async search() {
     this.setState({loading: true});
-    const response = await this.context.getClient().searchVideos({search: q});
+    const response = await this.context.getClient().searchVideos({search: this.state.q});
     if (!response.ok) {
       console.error("Error while searching, please try again!");
+      this.setState({loading: false});
       return;
     }
-    response.json().then(data => this.setState({result: data, loading: false}));
+    const result = await response.json();
+    this.setState({result, loading: false});
   }
 
   render() {
     return (
       <View>
-        <Input
+        <SearchBar
+          lightTheme={true}
+          clearIcon={false}
           placeholder="Search on Tournesol"
-          onSubmitEditing={(e) => this.search(e.nativeEvent.text)}
-          leftIcon={{ name: 'search', type: 'material' }}
+          onChangeText={(q) => this.setState({q})}
+          onSubmitEditing={() => this.search()}
+          value={this.state.q}
         />
         { this.state.loading ? <ActivityIndicator color={theme.colors.primary} size='large'/>
         : this.state.result ?

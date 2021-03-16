@@ -76,6 +76,10 @@ export default class ProfileScreen extends React.Component {
               <Icon name="watch-later" color={theme.colors.primary} />
               <Text>My rate later list</Text>
             </Pressable>
+            <Pressable style={{flexDirection: "row", marginTop: 20}} onPress={() => this.props.navigation.navigate('RaterSettings')}>
+              <Icon name="settings" color={theme.colors.primary} />
+              <Text>Rater settings</Text>
+            </Pressable>
             <View style={{ alignSelf: 'center', padding: 20 }}>
               <Button title="Log Out" onPress={() => this.signOut()} />
             </View>

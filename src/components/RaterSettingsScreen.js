@@ -56,14 +56,14 @@ export default class RaterSettingsScreen extends React.Component {
         { (this.state.constants && this.state.preferences) && 
           <View>
           { this.state.constants.features.map((f) =>
-            <View style={{ width: '90%', alignSelf: 'center', margin: 10 }}>
+            <View style={{ width: '90%', alignSelf: 'center', margin: 10 }} key={f.feature}>
               <CheckBox
                 title={f.description}
                 checked={this.state.preferences[`${f.feature}_enabled`]}
                 onPress={() => this.togglePreference(f.feature)}
                 disabled={this.state.loading}
               />
-              <Slider key={f.feature} onValueChange={(value) => this.updateCriteria(f.feature, value)} disabled={this.state.loading} value={this.state.preferences[f.feature] / 100} />
+              <Slider onValueChange={(value) => this.updateCriteria(f.feature, value)} disabled={this.state.loading} value={this.state.preferences[f.feature] / 100} />
             </View>
           )}
           </View>

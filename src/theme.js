@@ -22,6 +22,7 @@ const theme = {
   },
   Slider: {
     minimumTrackTintColor: colors.primary,
+    maximumTrackTintColor: colors.primary,
     trackStyle: {
       height: 14,
       borderRadius: 2,

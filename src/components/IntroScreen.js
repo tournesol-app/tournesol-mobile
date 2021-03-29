@@ -18,7 +18,7 @@ export default function IntroScreen({ navigation }) {
             onPress={() => {Linking.openURL(`https://www.youtube.com/watch?v=${Config.TOURNESOL_YOUTUBE_VIDEO_ID}`)}}
           />
         </View>
-        <Text>
+        <Text style={{padding: 10}}>
           Tournesol elicits and exploits contributors' inputs to identify top quality contents.
           Learn more with our <Text style={{color: 'red'}} onPress={() => {Linking.openURL('https://bit.ly/tournesol-app')}}>White Paper</Text>,
           our <Text style={{color: 'red'}} onPress={() => {Linking.openURL('https://wiki.tournesol.app/')}}>Tournesol Wiki</Text> or

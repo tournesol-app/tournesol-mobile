@@ -1,16 +1,18 @@
 import React from 'react';
 import { ActivityIndicator, Linking, Pressable, ScrollView } from 'react-native';
 import { AuthContext } from '../AuthContext';
-import { Avatar, ListItem, SearchBar, Text } from 'react-native-elements';
+import { Avatar, Button, ListItem, SearchBar, Text } from 'react-native-elements';
 import theme from '../theme';
+import { View } from 'react-native';
 
 export default class SearchScreen extends React.Component {
   static contextType = AuthContext;
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      q: "",
+      loading: null,
+      query: "",
+      next: null,
     };
   }
 
@@ -19,15 +21,27 @@ export default class SearchScreen extends React.Component {
   }
 
   async search() {
-    this.setState({loading: true});
-    const response = await this.context.getClient().searchVideos({search: this.state.q});
+    this.setState({loading: 'all'});
+    const response = await this.context.getClient().searchVideos({search: this.state.query});
     if (!response.ok) {
       console.error("Error while searching, please try again!");
-      this.setState({loading: false});
+      this.setState({loading: null});
       return;
     }
     const result = await response.json();
-    this.setState({result, loading: false});
+    this.setState({results: result.results, next: result.next, loading: null});
+  }
+
+  async loadMore() {
+    this.setState({loading: 'partial'});
+    const response = await this.context.getClient().searchVideos(null, this.state.next);
+    if (!response.ok) {
+      console.error("Error while loading, please try again!");
+      this.setState({loading: null});
+      return;
+    }
+    const result = await response.json();
+    this.setState({results: this.state.results.concat(result.results), next: result.next, loading: null});
   }
 
   render() {
@@ -39,10 +53,11 @@ export default class SearchScreen extends React.Component {
           placeholder="Search on Tournesol"
           onChangeText={(q) => this.setState({q})}
           onSubmitEditing={() => this.search()}
-          value={this.state.q}
+          value={this.state.query}
         />
-        { this.state.loading ? <ActivityIndicator color={theme.colors.primary} size='large'/>
-        : this.state.result ? this.state.result.results.map((item) =>
+        { this.state.loading == 'all' ? <ActivityIndicator color={theme.colors.primary} size='large'/>
+        : this.state.results ? <View>
+        {this.state.results.map((item) =>
           <ListItem key={item.id.toString()} bottomDivider>
             <Avatar
               source={{uri: `https://img.youtube.com/vi/${item.video_id}/default.jpg`}}
@@ -56,7 +71,9 @@ export default class SearchScreen extends React.Component {
               </Pressable>
             </ListItem.Content>
           </ListItem>
-        )
+          )}
+          {this.state.next && <Button title={(this.state.loading == 'partial') ? "Loading..." : "Load more..."} onPress={() => this.loadMore()} disabled={this.state.loading == 'partial'} />}
+        </View>
         : <Text>Veuillez saisir votre recherche.</Text>
         }
       </ScrollView>

@@ -62,13 +62,15 @@ export class APIClient {
     );
   }
 
-  // https://tournesol.app/api/v2/videos/search_tournesol/?backfire_risk=62.5&diversity_inclusion=62.5&duration_gte=0&engaging=62.5&importance=62.5&layman_friendly=62.5&pedagogy=62.5&reliability=62.5&search=test&views_gte=0
-  searchVideos(filters) {
-    return this.request(
-      '/api/v2/videos/search_tournesol/',
-      'GET',
-      filters
-    );
+  searchVideos(filters, link = null) {
+    console.log(link);
+    return (link == null) ?
+      this.request(
+        '/api/v2/videos/search_tournesol/',
+        'GET',
+        filters
+      )
+    : fetch(link, {headers: {Authorization: `Token ${this.authToken}`}});
   }
 
   fetchVideo(video_id) {

@@ -63,7 +63,6 @@ export class APIClient {
   }
 
   searchVideos(filters, link = null) {
-    console.log(link);
     return (link == null) ?
       this.request(
         '/api/v2/videos/search_tournesol/',

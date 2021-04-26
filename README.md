@@ -2,6 +2,8 @@
 
 The mobile application for [Tournesol](https://tournesol.app).
 
+See the wiki page [Contribute to Tournesol](https://wiki.tournesol.app/index.php/Contribute_to_Tournesol) for details.
+
 ### Dev setup
 
 This project uses [React Native](https://reactnative.dev/).

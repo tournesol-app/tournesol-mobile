@@ -20,8 +20,8 @@ export default class LoginScreen extends React.Component {
     const errors = {};
     if (this.state.username.trim() === '') errors.username = "Please enter your username!";
     if (this.state.password.trim() === '') errors.password = "Please enter your password!";
+    this.setState({errors});
     if (Object.keys(errors).length !== 0) {
-      this.setState({errors});
       return;
     }
     this.context.signIn(this.state.username, this.state.password);

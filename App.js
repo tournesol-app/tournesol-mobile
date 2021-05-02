@@ -78,12 +78,13 @@ export default function App(props) {
       const response = await this.getClient().authenticate(username, password);
       if (!response.ok) {
         console.error("Error while authenticating!");
-        return;
+        return false;
       }
       const data = await response.json();
       const token = data.token;
       await EncryptedStorage.setItem('userData', JSON.stringify({token, username}));
       authDispatch({ type: 'SIGN_IN', token, username });
+      return true;
     },
     signOut: async () => {
       await EncryptedStorage.removeItem('userData');

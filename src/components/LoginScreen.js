@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 
 import { AuthContext } from '../AuthContext';
@@ -24,8 +24,13 @@ export default class LoginScreen extends React.Component {
     if (Object.keys(errors).length !== 0) {
       return;
     }
-    this.context.signIn(this.state.username, this.state.password);
-    this.props.navigation.navigate('Home');
+    this.context.signIn(this.state.username, this.state.password).then(authenticated => {
+      if (authenticated) {
+        this.props.navigation.navigate('Home');
+      } else {
+        Alert.alert("Error while authenticating", "Please check your login and password");
+      }
+    });
   }
 
   render() {

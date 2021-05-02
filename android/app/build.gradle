@@ -153,9 +153,9 @@ android {
         }
         release {
             storeFile file('release.keystore')
-            storePassword TOURNESOL_UPLOAD_KEY_PASSWORD
-            keyAlias TOURNESOL_UPLOAD_KEY_ALIAS
-            keyPassword TOURNESOL_UPLOAD_KEY_PASSWORD
+            storePassword project.findProperty("TOURNESOL_UPLOAD_KEY_PASSWORD") ?: ""
+            keyAlias project.findProperty("TOURNESOL_UPLOAD_KEY_ALIAS") ?: ""
+            keyPassword project.findProperty("TOURNESOL_UPLOAD_KEY_PASSWORD") ?: ""
         }
     }
     buildTypes {

@@ -80,13 +80,37 @@ export class APIClient {
     );
   }
 
+  getRatingPrivacy(video_id) {
+    return this.request(
+      '/api/v2/videos/my_ratings_are_private/',
+      'GET',
+      { video_id }
+    );
+  }
+
+  setRatingPrivacy(video_id, is_public) {
+    console.log({
+      video_id,
+      is_public
+    });
+    return this.request(
+      '/api/v2/videos/set_rating_privacy/',
+      'PATCH',
+      null,
+      {
+        video_id,
+        is_public
+      }
+    );
+  }
+
   createVideo(video_id) {
     return this.request(
       '/api/v2/videos/',
       'POST',
       null,
       {
-        video_id: video_id
+        video_id
       }
     );
   }

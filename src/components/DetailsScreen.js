@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, ImageBackground, Linking, ScrollView, View } from 'react-native';
+import { ActivityIndicator, ImageBackground, Linking, ScrollView, Switch, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { Button, Divider, Icon, Text } from 'react-native-elements';
 import { AuthContext } from '../AuthContext';
@@ -44,10 +44,22 @@ export default class DetailsScreen extends React.Component {
       return;
     }
     this.setState({video: video, loading: false, rateLater: false});
+    this.fetchRatingPrivacy();
   }
   async fetchStatistics() {
     const response = await this.context.getClient().fetchStatistics();
     response.json().then(data => this.setState({stats: data}));
+  }
+  async fetchRatingPrivacy() {
+    const response = await this.context.getClient().getRatingPrivacy(this.state.video.video_id);
+    response.json().then(data => {
+      this.setState({isPublic: !data.my_ratings_are_private});
+      console.log(data);
+    });
+  }
+  async setRatingPrivacy(isPublic) {
+    const response = await this.context.getClient().setRatingPrivacy(this.state.video.video_id, isPublic);
+    response.json().then(data => this.setState({isPublic}));
   }
   async addToRateLater() {
     const response = await this.context.getClient().addToRateLater(this.state.video.video_id);
@@ -98,6 +110,10 @@ export default class DetailsScreen extends React.Component {
                     <Text>Rate later</Text>
                   </Pressable>
                   }
+                </View>
+                <View style={{alignSelf: "center"}}>
+                  <Text>This video is rated {this.state.isPublic ? "publicly" : "privately"}.</Text>
+                  <Switch value={this.state.isPublic} onValueChange={this.setRatingPrivacy.bind(this)} />
                 </View>
                 {(this.state.constants && this.state.video && this.state.stats) ? this.state.constants.features.map((f) =>
                   <View key={`${f.feature}_${this.state.video.video_id}`} style={{padding: 10}}>
